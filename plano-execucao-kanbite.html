@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KanBite — Plano de Execução Detalhado</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700;800&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0E0C0A;
+  --surface: #171412;
+  --surface2: #1F1B18;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #EDE8E1;
+  --muted: #7A7268;
+  --terra: #D85A30;
+  --terra-dim: rgba(216,90,48,0.15);
+  --sage: #4AAD85;
+  --sage-dim: rgba(74,173,133,0.12);
+  --gold: #D4A84B;
+  --gold-dim: rgba(212,168,75,0.12);
+  --blue: #5B8FD4;
+  --blue-dim: rgba(91,143,212,0.12);
+  --pink: #C46B9A;
+  --pink-dim: rgba(196,107,154,0.12);
+  --p1: #D85A30;
+  --p2: #4AAD85;
+  --p3: #D4A84B;
+  --p4: #5B8FD4;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ── HERO ── */
+.hero {
+  padding: 5rem 3rem 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+.hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--terra), transparent);
+}
+.hero-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 1.5rem;
+}
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 6vw, 5rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+}
+.hero h1 span { color: var(--terra); }
+.hero-sub {
+  font-size: 0.85rem;
+  color: var(--muted);
+  max-width: 520px;
+  line-height: 1.8;
+}
+.hero-badges {
+  display: flex; gap: 0.75rem; flex-wrap: wrap;
+  margin-top: 2rem;
+}
+.badge {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.8rem;
+  border-radius: 2px;
+  border: 1px solid;
+}
+.badge.terra { border-color: var(--terra); color: var(--terra); }
+.badge.sage  { border-color: var(--sage);  color: var(--sage);  }
+.badge.gold  { border-color: var(--gold);  color: var(--gold);  }
+.badge.blue  { border-color: var(--blue);  color: var(--blue);  }
+
+/* ── LAYOUT ── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 3rem; }
+
+.section-header {
+  padding: 3rem 0 2rem;
+  border-top: 1px solid var(--border);
+}
+.section-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 0.5rem;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ── GITHUB SETUP ── */
+.setup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.setup-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem;
+}
+.setup-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--gold);
+}
+.setup-card ul { list-style: none; }
+.setup-card li {
+  font-size: 0.78rem;
+  color: var(--muted);
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 0.5rem;
+}
+.setup-card li:last-child { border-bottom: none; }
+.setup-card li::before { content: '$'; color: var(--sage); flex-shrink: 0; }
+
+/* ── CARD TEMPLATE ── */
+.card-template {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+.card-template-header {
+  background: var(--surface2);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 1rem;
+}
+.ct-field { display: flex; flex-direction: column; gap: 0.75rem; padding: 1.25rem; }
+.ct-row { display: grid; grid-template-columns: 140px 1fr; gap: 1rem; align-items: start; }
+.ct-key {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+}
+.ct-val {
+  font-size: 0.78rem;
+  color: var(--text);
+  background: var(--surface2);
+  padding: 0.4rem 0.75rem;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  line-height: 1.5;
+}
+.ct-val.terra { border-left: 3px solid var(--terra); }
+.ct-val.sage  { border-left: 3px solid var(--sage); }
+.ct-val.gold  { border-left: 3px solid var(--gold); }
+
+/* ── GITHUB BOARD COLUMNS ── */
+.gh-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+.gh-col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.gh-col-header {
+  padding: 0.6rem 0.8rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.gh-col-body { padding: 0.6rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.gh-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--text);
+}
+.gh-card-tag {
+  display: inline-block;
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+.gh-card-tag.dev  { background: var(--blue-dim);  color: var(--blue); }
+.gh-card-tag.doc  { background: var(--gold-dim);  color: var(--gold); }
+.gh-card-tag.test { background: var(--sage-dim);  color: var(--sage); }
+.gh-card-tag.bug  { background: var(--terra-dim); color: var(--terra); }
+.gh-count {
+  font-size: 0.65rem;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  color: var(--muted);
+}
+
+/* ── SPRINT BLOCKS ── */
+.sprint-block {
+  margin-top: 3rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.sprint-block-header {
+  padding: 1.25rem 1.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+}
+.sprint-block-header.s1 { border-left: 4px solid var(--p1); background: rgba(216,90,48,0.05); }
+.sprint-block-header.s2 { border-left: 4px solid var(--p2); background: rgba(74,173,133,0.05); }
+.sprint-block-header.s3 { border-left: 4px solid var(--p3); background: rgba(212,168,75,0.05); }
+.sprint-block-header.s4 { border-left: 4px solid var(--p4); background: rgba(91,143,212,0.05); }
+.sprint-num-large {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  opacity: 0.2;
+}
+.sprint-meta { flex: 1; padding: 0 1.5rem; }
+.sprint-meta h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.sprint-meta p { font-size: 0.75rem; color: var(--muted); }
+
+/* ── DAILY GRID ── */
+.daily-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0;
+}
+.day-block {
+  padding: 1.25rem 1.5rem;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.day-block:nth-child(3n) { border-right: none; }
+.day-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.day-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text);
+}
+.day-tasks { list-style: none; }
+.day-tasks li {
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.25rem 0;
+  display: flex; gap: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.4;
+}
+.day-tasks li:last-child { border-bottom: none; }
+.day-tasks li::before { content: '›'; color: var(--terra); flex-shrink: 0; }
+.day-deliverable {
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 3px;
+  background: var(--terra-dim);
+  color: var(--terra);
+  border: 1px solid rgba(216,90,48,0.2);
+}
+.day-deliverable.sage { background: var(--sage-dim); color: var(--sage); border-color: rgba(74,173,133,0.2); }
+.day-deliverable.gold { background: var(--gold-dim); color: var(--gold); border-color: rgba(212,168,75,0.2); }
+.day-deliverable.blue { background: var(--blue-dim); color: var(--blue); border-color: rgba(91,143,212,0.2); }
+
+/* ── PROGRAMMER PROFILES ── */
+.programmers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.programmer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.programmer-header {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; gap: 1rem; align-items: center;
+}
+.programmer-avatar {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.av-1 { background: var(--terra-dim); color: var(--terra); border: 1px solid rgba(216,90,48,0.3); }
+.av-2 { background: var(--sage-dim);  color: var(--sage);  border: 1px solid rgba(74,173,133,0.3); }
+.av-3 { background: var(--gold-dim);  color: var(--gold);  border: 1px solid rgba(212,168,75,0.3); }
+.av-4 { background: var(--blue-dim);  color: var(--blue);  border: 1px solid rgba(91,143,212,0.3); }
+.av-5 { background: var(--pink-dim);  color: var(--pink);  border: 1px solid rgba(196,107,154,0.3); }
+.programmer-info h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+.programmer-info .role { font-size: 0.72rem; color: var(--muted); }
+.programmer-body { padding: 1.25rem; }
+.prog-sprint {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.prog-sprint:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.prog-sprint-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+.prog-sprint-label.s1 { color: var(--p1); }
+.prog-sprint-label.s2 { color: var(--p2); }
+.prog-sprint-label.s3 { color: var(--p3); }
+.prog-sprint-label.s4 { color: var(--p4); }
+.prog-tasks { list-style: none; }
+.prog-tasks li {
+  font-size: 0.75rem;
+  color: var(--muted);
+  padding: 0.25rem 0;
+  display: flex; gap: 0.5rem;
+  line-height: 1.4;
+}
+.prog-tasks li::before { content: '→'; flex-shrink: 0; }
+.prog-tasks li.s1::before { color: var(--p1); }
+.prog-tasks li.s2::before { color: var(--p2); }
+.prog-tasks li.s3::before { color: var(--p3); }
+.prog-tasks li.s4::before { color: var(--p4); }
+
+/* ── KANBAN CARDS FOR EACH PROGRAMMER ── */
+.cards-section { margin-top: 1.25rem; }
+.cards-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+.gh-card-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.gh-card-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.75rem;
+}
+.gh-card-item-title { color: var(--text); margin-bottom: 0.3rem; font-weight: 500; }
+.gh-card-item-meta {
+  display: flex; gap: 0.5rem; flex-wrap: wrap;
+  font-size: 0.65rem;
+}
+.meta-pill {
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  border: 1px solid;
+}
+.meta-pill.terra { border-color: rgba(216,90,48,0.4); color: var(--terra); }
+.meta-pill.sage  { border-color: rgba(74,173,133,0.4); color: var(--sage); }
+.meta-pill.gold  { border-color: rgba(212,168,75,0.4); color: var(--gold); }
+.meta-pill.blue  { border-color: rgba(91,143,212,0.4); color: var(--blue); }
+.meta-pill.pink  { border-color: rgba(196,107,154,0.4); color: var(--pink); }
+.meta-pill.muted { border-color: var(--border2); color: var(--muted); }
+
+/* ── MODULE MAP ── */
+.module-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.module-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.module-card-header {
+  padding: 0.6rem 0.85rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+.module-card-header.terra { color: var(--terra); background: var(--terra-dim); }
+.module-card-header.sage  { color: var(--sage);  background: var(--sage-dim);  }
+.module-card-header.gold  { color: var(--gold);  background: var(--gold-dim);  }
+.module-card-header.blue  { color: var(--blue);  background: var(--blue-dim);  }
+.module-card-header.pink  { color: var(--pink);  background: var(--pink-dim);  }
+.module-card-body { padding: 0.75rem 0.85rem; }
+.module-file {
+  font-size: 0.72rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+}
+.module-file:last-child { border-bottom: none; }
+.module-file code { color: var(--text); font-size: 0.7rem; }
+.module-file .who { font-size: 0.62rem; }
+.who.p1 { color: var(--p1); }
+.who.p2 { color: var(--p2); }
+.who.p3 { color: var(--p3); }
+.who.p4 { color: var(--p4); }
+.who.p5 { color: var(--pink); }
+
+/* ── FOOTER ── */
+footer {
+  margin-top: 5rem;
+  padding: 2rem 3rem;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+footer strong { color: var(--terra); }
+
+/* ── PRINT / RESPONSIVE ── */
+@media (max-width: 768px) {
+  .hero { padding: 3rem 1.5rem 2.5rem; }
+  .container { padding: 0 1.5rem; }
+  .gh-board { grid-template-columns: repeat(2, 1fr); }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+
+/* ── TOC ── */
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+.toc-group h5 {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--terra);
+  margin-bottom: 0.5rem;
+}
+.toc-group a {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 0.2rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.toc-group a:last-child { border-bottom: none; }
+.toc-group a:hover { color: var(--text); }
+</style>
+</head>
+<body>
+
+<!-- ═══════ HERO ═══════ -->
+<div class="hero">
+  <div class="hero-eyebrow">KanBite · Engenharia de Software · 5 Programadores · 4 Sprints</div>
+  <h1>Plano de<br><span>Execução</span><br>Detalhado</h1>
+  <p class="hero-sub">
+    Guia diário completo de codificação, criação de cartões no GitHub Projects,
+    responsabilidades individuais e mapa de todos os módulos do sistema.
+  </p>
+  <div class="hero-badges">
+    <span class="badge terra">Python + Streamlit</span>
+    <span class="badge sage">SQLite + SQLAlchemy</span>
+    <span class="badge gold">GitHub Projects</span>
+    <span class="badge blue">pytest + CI</span>
+  </div>
+
+  <div class="toc">
+    <div class="toc-group">
+      <h5>Estrutura</h5>
+      <a href="#github-setup">Configuração do GitHub</a>
+      <a href="#card-template">Template de Cartão</a>
+      <a href="#board-colunas">Colunas do Board</a>
+      <a href="#modulos">Mapa de Módulos</a>
+    </div>
+    <div class="toc-group">
+      <h5>Sprints</h5>
+      <a href="#sprint1">Sprint 1 — Docs Estratégicos</a>
+      <a href="#sprint2">Sprint 2 — Arq. & Design</a>
+      <a href="#sprint3">Sprint 3 — Código Core</a>
+      <a href="#sprint4">Sprint 4 — Testes & Entrega</a>
+    </div>
+    <div class="toc-group">
+      <h5>Planos Individuais</h5>
+      <a href="#prog1">Dev 1 — Tech Lead / Auth</a>
+      <a href="#prog2">Dev 2 — Backend Kanban</a>
+      <a href="#prog3">Dev 3 — Métricas & BD</a>
+      <a href="#prog4">Dev 4 — Frontend UI</a>
+      <a href="#prog5">Dev 5 — Docs & QA</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ GITHUB SETUP ═══════ -->
+<div class="container">
+  <div id="github-setup" class="section-header">
+    <div class="section-label">Semana 0 — Antes de começar</div>
+    <h2 class="section-title">Configuração do GitHub</h2>
+  </div>
+
+  <div class="setup-grid">
+    <div class="setup-card">
+      <h4>1. Repositório</h4>
+      <ul>
+        <li>Criar repo público: <code>kanbite</code></li>
+        <li>Adicionar README.md com visão geral</li>
+        <li>Criar branch <code>main</code> (protegida)</li>
+        <li>Criar branch <code>develop</code> (base)</li>
+        <li>Regra: PR obrigatório para main</li>
+        <li>Regra: 1 revisor obrigatório por PR</li>
+      </ul>
+    </div>
+    <div class="setup-card">
+      <h4>2. GitHub Projects</h4>
+      <ul>
+        <li>Criar Project: "KanBite Development"</li>
+        <li>Layout: Board (Kanban)</li>
+        <li>Adicionar 5 colunas (ver seção abaixo)</li>
+        <li>Ativar campo: Assignee, Sprint, Priority</li>
+        <li>Ativar campo: Label, Milestone, Size</li>
+        <li>Criar 4 Milestones = 4 Sprints</li>
+      </ul>
+    </div>
+    <div class="setup-card">
+      <h4>3. Labels a criar</h4>
+      <ul>
+        <li>🔴 <code>priority: alta</code> — #D85A30</li>
+        <li>🟡 <code>priority: media</code> — #D4A84B</li>
+        <li>🟢 <code>priority: baixa</code> — #4AAD85</li>
+        <li>🔵 <code>type: feature</code> — #5B8FD4</li>
+        <li>📄 <code>type: doc</code> — #C46B9A</li>
+        <li>🧪 <code>type: test</code> — #4AAD85</li>
+        <li>🐛 <code>type: bug</code> — #D85A30</li>
+        <li>🏗 <code>type: infra</code> — #7A7268</li>
+      </ul>
+    </div>
+    <div class="setup-card">
+      <h4>4. Branches por dev</h4>
+      <ul>
+        <li>Convenção: <code>feature/dev1-auth</code></li>
+        <li>Convenção: <code>feature/dev2-kanban</code></li>
+        <li>Convenção: <code>feature/dev3-metrics</code></li>
+        <li>Convenção: <code>feature/dev4-ui</code></li>
+        <li>Convenção: <code>docs/dev5-artefatos</code></li>
+        <li>Merge: sempre via PR → develop</li>
+      </ul>
+    </div>
+    <div class="setup-card">
+      <h4>5. Estrutura de pastas</h4>
+      <ul>
+        <li><code>kanbite/app.py</code> — entrypoint</li>
+        <li><code>kanbite/pages/</code> — telas Streamlit</li>
+        <li><code>kanbite/services/</code> — lógica de negócio</li>
+        <li><code>kanbite/models/</code> — entidades Pydantic</li>
+        <li><code>kanbite/database/</code> — ORM + repos</li>
+        <li><code>kanbite/tests/</code> — pytest</li>
+        <li><code>docs/</code> — artefatos PDF</li>
+      </ul>
+    </div>
+    <div class="setup-card">
+      <h4>6. Cerimônias do sprint</h4>
+      <ul>
+        <li>Segunda-feira: Sprint Planning (30min)</li>
+        <li>Diariamente: Daily standup — async no Slack/Discord</li>
+        <li>Formato: O que fiz? O que farei? Bloqueio?</li>
+        <li>Sexta-feira: Sprint Review (30min)</li>
+        <li>Mover cartões no Projects após cada entrega</li>
+        <li>Fechar Issues ao mergar PR</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CARD TEMPLATE ═══════ -->
+<div class="container">
+  <div id="card-template" class="section-header">
+    <div class="section-label">GitHub Projects</div>
+    <h2 class="section-title">Template padrão de cartão (Issue)</h2>
+  </div>
+
+  <div class="card-template">
+    <div class="card-template-header">
+      <span>MODELO DE ISSUE — copiar e adaptar para cada cartão</span>
+    </div>
+    <div class="ct-field">
+      <div class="ct-row">
+        <div class="ct-key">Título</div>
+        <div class="ct-val terra">[SPRINT X] [Módulo] — Descrição curta da tarefa</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-key">Descrição (body)</div>
+        <div class="ct-val">
+          <strong>📋 História de usuário relacionada:</strong> US-XX<br><br>
+          <strong>🎯 Objetivo:</strong> O que esta tarefa entrega.<br><br>
+          <strong>✅ Critérios de aceitação:</strong><br>
+          - [ ] Critério 1<br>
+          - [ ] Critério 2<br>
+          - [ ] Critério 3<br><br>
+          <strong>🔗 Dependências:</strong> Issue #XX deve estar concluída antes.<br><br>
+          <strong>📁 Arquivos a criar/editar:</strong><br>
+          <code>kanbite/services/nome_service.py</code><br><br>
+          <strong>⏱ Estimativa:</strong> 2–4 horas
+        </div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-key">Labels</div>
+        <div class="ct-val sage">type: feature + priority: alta + sprint-X</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-key">Assignee</div>
+        <div class="ct-val">Dev responsável (ex: @dev2-joao)</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-key">Milestone</div>
+        <div class="ct-val">Sprint X (data de início → data de fim)</div>
+      </div>
+      <div class="ct-row">
+        <div class="ct-key">Projeto</div>
+        <div class="ct-val">KanBite Development → coluna "Backlog"</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ BOARD COLUNAS ═══════ -->
+<div class="container">
+  <div id="board-colunas" class="section-header">
+    <div class="section-label">GitHub Projects — Board</div>
+    <h2 class="section-title">As 5 colunas do Kanban de desenvolvimento</h2>
+  </div>
+
+  <div class="gh-board">
+    <div class="gh-col">
+      <div class="gh-col-header" style="color:var(--muted)">
+        Backlog <span class="gh-count">total</span>
+      </div>
+      <div class="gh-col-body">
+        <div style="font-size:0.7rem;color:var(--muted);padding:0.3rem 0;">Todas as issues criadas ainda não iniciadas. Qualquer membro pode mover para "Sprint Atual" durante o planning.</div>
+        <div class="gh-card">
+          US-01: Criar conta de usuário
+          <div><span class="gh-card-tag dev">feature</span></div>
+        </div>
+        <div class="gh-card">
+          DOC-01: Documento de Visão
+          <div><span class="gh-card-tag doc">doc</span></div>
+        </div>
+        <div class="gh-card">
+          US-09: WIP limit por coluna
+          <div><span class="gh-card-tag dev">feature</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="gh-col">
+      <div class="gh-col-header" style="color:var(--blue)">
+        Sprint Atual <span class="gh-count">sprint</span>
+      </div>
+      <div class="gh-col-body">
+        <div style="font-size:0.7rem;color:var(--muted);padding:0.3rem 0;">Issues comprometidas para o sprint corrente. Selecionadas durante o Sprint Planning.</div>
+        <div class="gh-card">
+          ARCH-01: Architecture Notebook
+          <div><span class="gh-card-tag doc">doc</span></div>
+        </div>
+        <div class="gh-card">
+          DB-01: Schema SQLAlchemy
+          <div><span class="gh-card-tag dev">feature</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="gh-col">
+      <div class="gh-col-header" style="color:var(--gold)">
+        Em Progresso <span class="gh-count">WIP ≤ 2/dev</span>
+      </div>
+      <div class="gh-col-body">
+        <div style="font-size:0.7rem;color:var(--muted);padding:0.3rem 0;">Cada dev pode ter no máximo 2 issues aqui simultaneamente. Mover ao iniciar o trabalho.</div>
+        <div class="gh-card">
+          US-03: CRUD de Quadro
+          <div><span class="gh-card-tag dev">feature</span> <span style="font-size:0.62rem;color:var(--sage)">@dev2</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="gh-col">
+      <div class="gh-col-header" style="color:var(--pink)">
+        Em Revisão <span class="gh-count">PR aberto</span>
+      </div>
+      <div class="gh-col-body">
+        <div style="font-size:0.7rem;color:var(--muted);padding:0.3rem 0;">PR aberto aguardando code review. Outro dev deve revisar em até 24h.</div>
+        <div class="gh-card">
+          AUTH-02: Login JWT
+          <div><span class="gh-card-tag dev">feature</span> <span style="font-size:0.62rem;color:var(--terra)">PR #12</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="gh-col">
+      <div class="gh-col-header" style="color:var(--sage)">
+        Concluído <span class="gh-count">merged</span>
+      </div>
+      <div class="gh-col-body">
+        <div style="font-size:0.7rem;color:var(--muted);padding:0.3rem 0;">PR aprovado e mergeado em develop. Issue fechada automaticamente via "Closes #X".</div>
+        <div class="gh-card">
+          SETUP-01: Estrutura de pastas
+          <div><span class="gh-card-tag test">merged</span></div>
+        </div>
+        <div class="gh-card">
+          DOC-00: README inicial
+          <div><span class="gh-card-tag test">merged</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MÓDULOS ═══════ -->
+<div class="container">
+  <div id="modulos" class="section-header">
+    <div class="section-label">Arquitetura</div>
+    <h2 class="section-title">Mapa completo de módulos — quem faz o quê</h2>
+  </div>
+
+  <div class="module-map">
+    <div class="module-card">
+      <div class="module-card-header terra">Auth & Usuários — Dev 1</div>
+      <div class="module-card-body">
+        <div class="module-file"><code>models/user.py</code> <span class="who p1">Dev1</span></div>
+        <div class="module-file"><code>services/auth_service.py</code> <span class="who p1">Dev1</span></div>
+        <div class="module-file"><code>pages/01_login.py</code> <span class="who p1">Dev1</span></div>
+        <div class="module-file"><code>pages/02_register.py</code> <span class="who p1">Dev1</span></div>
+        <div class="module-file"><code>database/repos/user_repo.py</code> <span class="who p1">Dev1</span></div>
+        <div class="module-file"><code>tests/test_auth.py</code> <span class="who p1">Dev1</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-header sage">Kanban Core — Dev 2</div>
+      <div class="module-card-body">
+        <div class="module-file"><code>models/board.py</code> <span class="who p2">Dev2</span></div>
+        <div class="module-file"><code>models/card.py</code> <span class="who p2">Dev2</span></div>
+        <div class="module-file"><code>models/swimlane.py</code> <span class="who p2">Dev2</span></div>
+        <div class="module-file"><code>services/kanban_service.py</code> <span class="who p2">Dev2</span></div>
+        <div class="module-file"><code>database/repos/board_repo.py</code> <span class="who p2">Dev2</span></div>
+        <div class="module-file"><code>database/repos/card_repo.py</code> <span class="who p2">Dev2</span></div>
+        <div class="module-file"><code>tests/test_kanban.py</code> <span class="who p2">Dev2</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-header gold">Métricas & BD — Dev 3</div>
+      <div class="module-card-body">
+        <div class="module-file"><code>database/engine.py</code> <span class="who p3">Dev3</span></div>
+        <div class="module-file"><code>database/base.py</code> <span class="who p3">Dev3</span></div>
+        <div class="module-file"><code>services/metrics_service.py</code> <span class="who p3">Dev3</span></div>
+        <div class="module-file"><code>pages/03_metrics.py</code> <span class="who p3">Dev3</span></div>
+        <div class="module-file"><code>tests/test_metrics.py</code> <span class="who p3">Dev3</span></div>
+        <div class="module-file"><code>tests/test_wip.py</code> <span class="who p3">Dev3</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-header blue">UI & Componentes — Dev 4</div>
+      <div class="module-card-body">
+        <div class="module-file"><code>app.py</code> <span class="who p4">Dev4</span></div>
+        <div class="module-file"><code>pages/00_home.py</code> <span class="who p4">Dev4</span></div>
+        <div class="module-file"><code>pages/04_board.py</code> <span class="who p4">Dev4</span></div>
+        <div class="module-file"><code>components/kan_card.py</code> <span class="who p4">Dev4</span></div>
+        <div class="module-file"><code>components/sidebar.py</code> <span class="who p4">Dev4</span></div>
+        <div class="module-file"><code>assets/style.css</code> <span class="who p4">Dev4</span></div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-card-header pink">Docs & QA — Dev 5</div>
+      <div class="module-card-body">
+        <div class="module-file"><code>docs/01_gerenciamento.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/02_visao.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/03_nfr.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/04_historias.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/05_arquitetura.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/06_wireframes.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/07_banco.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>docs/09_infra.pdf</code> <span class="who p5">Dev5</span></div>
+        <div class="module-file"><code>requirements.txt</code> <span class="who p5">Dev5</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SPRINT 1 ═══════ -->
+<div class="container">
+  <div id="sprint1" class="section-header">
+    <div class="section-label">Semanas 1–2</div>
+    <h2 class="section-title">Sprint 1 — Fundação & Documentação Estratégica</h2>
+  </div>
+
+  <div class="sprint-block">
+    <div class="sprint-block-header s1">
+      <div class="sprint-num-large" style="color:var(--p1)">01</div>
+      <div class="sprint-meta">
+        <h3>Objetivo: todos os documentos base + setup técnico</h3>
+        <p>Entregas: README · Visão · RNF · Histórias de Usuário · Gerenciamento Kanban · Estrutura de pastas + requirements.txt</p>
+      </div>
+    </div>
+    <div class="daily-grid">
+
+      <div class="day-block">
+        <div class="day-label">Dia 1 — Segunda</div>
+        <div class="day-title">Setup completo do projeto</div>
+        <ul class="day-tasks">
+          <li>Todos: reunião de kickoff (30min) — decidir nomes de usuário, branch strategy</li>
+          <li>Dev1: criar repositório GitHub, proteger branch main, adicionar todos como collaborators</li>
+          <li>Dev1: criar GitHub Project com 5 colunas e todos os labels</li>
+          <li>Dev5: criar todos os Milestones (Sprint 1–4 com datas)</li>
+          <li>Dev4: criar estrutura de pastas inicial e fazer primeiro commit</li>
+          <li>Dev5: criar requirements.txt inicial com streamlit, sqlalchemy, pydantic, pytest, bcrypt</li>
+          <li>Todos: abrir Issues do Sprint 1 no Projects e mover para "Sprint Atual"</li>
+        </ul>
+        <div class="day-deliverable">GitHub repo + Projects configurado e acessível para todos</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 2 — Terça</div>
+        <div class="day-title">Documento de Visão e Escopo</div>
+        <ul class="day-tasks">
+          <li>Dev5: escrever seção "Problema resolvido" — restaurante sem controle de tarefas</li>
+          <li>Dev5: listar stakeholders: Gerente, Chef, Garçom, Caixa, Fornecedor</li>
+          <li>Dev5: descrever ambiente de trabalho dos usuários (cozinha, salão)</li>
+          <li>Dev1: contribuir com seção "Posição no mercado" — diferencial do KanBite</li>
+          <li>Dev3: escrever resumo de funcionalidades (baseado nos requisitos do PDF)</li>
+          <li>Todos: revisão rápida do documento (15min)</li>
+        </ul>
+        <div class="day-deliverable">Artefato 2: docs/02_visao.md — rascunho completo</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 3 — Quarta</div>
+        <div class="day-title">Histórias de Usuário (US-01 a US-08)</div>
+        <ul class="day-tasks">
+          <li>Dev5: escrever US-01 a US-04 (Conta, Login, Criar Quadro, Editar Quadro)</li>
+          <li>Dev2: escrever US-05 a US-08 (Swimlane CRUD, Cartão CRUD, Mover colunas, Mover swimlane)</li>
+          <li>Formato obrigatório: "Como [persona] eu quero [ação] para [benefício]"</li>
+          <li>Cada US deve ter ao menos 3 critérios de aceitação</li>
+          <li>Abrir Issue no GitHub para cada US e linkar ao Milestone Sprint 1</li>
+        </ul>
+        <div class="day-deliverable sage">US-01 a US-08 criadas como Issues no GitHub + doc parcial</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 4 — Quinta</div>
+        <div class="day-title">Histórias de Usuário (US-09 a US-15) + RNF</div>
+        <ul class="day-tasks">
+          <li>Dev3: escrever US-09 a US-13 (WIP Limit, Cycle Time, Lead Time, Throughput, WIP)</li>
+          <li>Dev5: escrever US-14 a US-15 (Multi-projeto, Filtros)</li>
+          <li>Dev1: iniciar Artefato 3 — Requisitos Não Funcionais</li>
+          <li>RNF: usabilidade (tempo resposta &lt;2s), segurança (bcrypt), compatibilidade (Python 3.11)</li>
+          <li>RNF: normas — ISO/IEC 25010 para qualidade de software</li>
+          <li>Abrir Issues US-09 a US-15 no GitHub Projects</li>
+        </ul>
+        <div class="day-deliverable">US-09 a US-15 + rascunho do Artefato 3 (RNF)</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 5 — Sexta</div>
+        <div class="day-title">Gerenciamento Kanban + Sprint Review 1A</div>
+        <ul class="day-tasks">
+          <li>Dev5: escrever Artefato 1 — descrever o quadro GitHub Projects usado no projeto</li>
+          <li>Artefato 1: listar cada cartão criado, sua coluna atual, responsável e propósito</li>
+          <li>Artefato 1: tirar screenshot do Projects como evidência</li>
+          <li>Todos: Sprint Review parcial — o que foi entregue? O que falta?</li>
+          <li>Mover cartões concluídos para "Concluído" no Projects</li>
+          <li>Criar Issues para tarefas da semana 2</li>
+        </ul>
+        <div class="day-deliverable">Artefato 1 rascunho + todos os cartões de US no Projects</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 6 — Segunda (semana 2)</div>
+        <div class="day-title">Refinamento dos documentos</div>
+        <ul class="day-tasks">
+          <li>Dev5: revisar ortografia e formatação da Visão e Escopo</li>
+          <li>Dev1: finalizar RNF — adicionar requisitos de interface, licenciamento, documentação</li>
+          <li>Dev2: revisão das Histórias de Usuário — verificar se todas seguem o formato</li>
+          <li>Dev3: começar a pensar no schema do banco (anotações preliminares)</li>
+          <li>Dev4: prototipar layout visual do app em papel/Figma (wireframe inicial)</li>
+        </ul>
+        <div class="day-deliverable sage">Documentos revisados e prontos para PDF</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 7 — Terça</div>
+        <div class="day-title">Setup técnico do código</div>
+        <ul class="day-tasks">
+          <li>Dev4: criar app.py com navegação multi-page do Streamlit</li>
+          <li>Dev4: criar pages/ com arquivos vazios (01_login.py etc.) e stubs de função</li>
+          <li>Dev3: criar database/engine.py com conexão SQLite e sessão SQLAlchemy</li>
+          <li>Dev1: criar models/user.py com classe User (Pydantic + SQLAlchemy)</li>
+          <li>Dev5: configurar pytest — criar tests/ com conftest.py e banco de teste</li>
+          <li>Todos: garantir que <code>streamlit run app.py</code> funciona sem erros</li>
+        </ul>
+        <div class="day-deliverable">App Streamlit rodando (tela em branco navegável)</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 8 — Quarta</div>
+        <div class="day-title">Modelos de domínio</div>
+        <ul class="day-tasks">
+          <li>Dev2: criar models/board.py — campos: id, name, owner_id, wip_todo, wip_doing, created_at</li>
+          <li>Dev2: criar models/swimlane.py — campos: id, board_id, name, position</li>
+          <li>Dev2: criar models/card.py — todos os campos exigidos: id, title, responsible, due_date, priority, description, column, started_at, finished_at</li>
+          <li>Dev3: criar database/base.py com Base declarativa e criar_tabelas()</li>
+          <li>Dev1: testar criação do banco: python -c "from database.base import criar_tabelas; criar_tabelas()"</li>
+        </ul>
+        <div class="day-deliverable sage">Todos os models criados + banco SQLite inicializado</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 9 — Quinta</div>
+        <div class="day-title">Gerar PDFs + finalizar Sprint 1</div>
+        <ul class="day-tasks">
+          <li>Dev5: converter docs .md para PDF (usar pandoc ou exportar do Google Docs)</li>
+          <li>Verificar: Artefato 1, 2, 3 e 4 gerados em PDF</li>
+          <li>Dev5: criar pasta docs/ no repositório e comitar os PDFs</li>
+          <li>Dev1: abrir PR para mergar branch de setup em develop</li>
+          <li>Dev2: revisar e aprovar PR do Dev1</li>
+        </ul>
+        <div class="day-deliverable">Artefatos 1–4 em PDF no repositório</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 10 — Sexta</div>
+        <div class="day-title">Sprint Review 1 + Sprint Planning 2</div>
+        <ul class="day-tasks">
+          <li>Todos: Sprint Review — demo dos documentos, verificar critérios de avaliação do PDF</li>
+          <li>Fechar todos os Issues do Sprint 1 como concluídos</li>
+          <li>Mover cartões para coluna "Concluído" no Projects</li>
+          <li>Todos: Sprint Planning 2 — selecionar Issues do Backlog para Sprint 2</li>
+          <li>Criar Issues novas para Sprint 2 (Arquitetura, Wireframes, BD)</li>
+          <li>Mover Issues Sprint 2 para coluna "Sprint Atual"</li>
+        </ul>
+        <div class="day-deliverable gold">Sprint 1 encerrado · Sprint 2 planejado e iniciado</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SPRINT 2 ═══════ -->
+<div class="container">
+  <div id="sprint2" class="section-header">
+    <div class="section-label">Semanas 3–4</div>
+    <h2 class="section-title">Sprint 2 — Arquitetura, Banco & Wireframes</h2>
+  </div>
+
+  <div class="sprint-block">
+    <div class="sprint-block-header s2">
+      <div class="sprint-num-large" style="color:var(--p2)">02</div>
+      <div class="sprint-meta">
+        <h3>Objetivo: Artefatos 5, 6, 7 + repositórios de dados</h3>
+        <p>Entregas: Architecture Notebook · Storyboards + Wireframes · Projeto físico BD · database/repos/ completos</p>
+      </div>
+    </div>
+    <div class="daily-grid">
+
+      <div class="day-block">
+        <div class="day-label">Dia 11 — Segunda</div>
+        <div class="day-title">Architecture Notebook — Parte 1</div>
+        <ul class="day-tasks">
+          <li>Dev1: escrever objetivos de arquitetura — escalabilidade, manutenibilidade, simplicidade</li>
+          <li>Dev1: listar suposições — Python 3.11, single-user por sessão Streamlit, SQLite local</li>
+          <li>Dev3: descrever camadas: Apresentação (Streamlit) → Negócio (Services) → Dados (SQLAlchemy)</li>
+          <li>Dev2: descrever mecanismos de arquitetura — session_state para estado, ORM para queries</li>
+          <li>Dev5: organizar documento no template fornecido</li>
+        </ul>
+        <div class="day-deliverable">Architecture Notebook — seções 1 a 3 rascunhadas</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 12 — Terça</div>
+        <div class="day-title">Architecture Notebook — Parte 2 + impacto de ferramentas</div>
+        <ul class="day-tasks">
+          <li>Dev1: descrever decisões arquiteturais: por que Streamlit? por que SQLite e não PostgreSQL?</li>
+          <li>Dev4: descrever impacto do Streamlit: reruns automáticos, session_state como estado global</li>
+          <li>Dev3: descrever impacto SQLAlchemy: abstração do SQL, lazy loading, relacionamentos</li>
+          <li>Dev2: descrever perspectivas: lógica, implantação, processo</li>
+          <li>Dev5: finalizar e exportar Artefato 5 como PDF</li>
+        </ul>
+        <div class="day-deliverable sage">Artefato 5: Architecture Notebook completo em PDF</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 13 — Quarta</div>
+        <div class="day-title">Projeto físico do banco — Diagrama ER</div>
+        <ul class="day-tasks">
+          <li>Dev3: criar diagrama ER com: users, boards, swimlanes, cards, board_members</li>
+          <li>Ferramenta: dbdiagram.io ou draw.io — exportar como PNG</li>
+          <li>Dev3: documentar tabela users: colunas, PK, UNIQUE, NOT NULL</li>
+          <li>Dev3: documentar tabela boards: FK para users, campos WIP</li>
+          <li>Dev3: documentar tabela cards: todos os campos incluindo started_at, finished_at</li>
+          <li>Dev5: escrever descrição textual do propósito de cada tabela</li>
+        </ul>
+        <div class="day-deliverable">Diagrama ER + documentação textual de 5 tabelas</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 14 — Quinta</div>
+        <div class="day-title">Repositórios de dados</div>
+        <ul class="day-tasks">
+          <li>Dev2: criar database/repos/board_repo.py — funções: criar, buscar, atualizar, deletar board</li>
+          <li>Dev2: criar database/repos/card_repo.py — CRUD + mover_coluna() + mover_swimlane()</li>
+          <li>Dev2: criar database/repos/swimlane_repo.py — CRUD de swimlanes</li>
+          <li>Dev1: criar database/repos/user_repo.py — criar usuário, buscar por email</li>
+          <li>Dev3: testar repos com pytest — inserir e buscar cada entidade</li>
+        </ul>
+        <div class="day-deliverable sage">Todos os repositórios criados e testados</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 15 — Sexta</div>
+        <div class="day-title">Projeto físico BD finalizado + PDF</div>
+        <ul class="day-tasks">
+          <li>Dev3: adicionar tabela activity_log (registra quando cartão muda de coluna — necessário para cycle time)</li>
+          <li>Dev5: montar Artefato 7 completo: diagrama + texto de cada tabela</li>
+          <li>Dev5: exportar Artefato 7 como PDF</li>
+          <li>Dev3: garantir que Alembic ou script SQL de migração está no repositório</li>
+          <li>Todos: mover cartões BD para "Concluído" no Projects</li>
+        </ul>
+        <div class="day-deliverable">Artefato 7 em PDF + migrations funcionando</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 16 — Segunda (semana 4)</div>
+        <div class="day-title">Wireframes — Login, Registro, Home</div>
+        <ul class="day-tasks">
+          <li>Dev4: desenhar wireframe 1: tela de Login (campos email/senha, botão entrar, link criar conta)</li>
+          <li>Dev4: desenhar wireframe 2: tela de Registro (campos nome, email, senha, confirmação)</li>
+          <li>Dev4: desenhar wireframe 3: home — lista de projetos do usuário</li>
+          <li>Ferramenta: Figma free, Balsamiq, ou papel escaneado</li>
+          <li>Dev5: montar storyboard 1: cenário "Usuário faz login e acessa o quadro"</li>
+        </ul>
+        <div class="day-deliverable">Wireframes 1–3 + Storyboard cenário de Login</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 17 — Terça</div>
+        <div class="day-title">Wireframes — Quadro e Cartão</div>
+        <ul class="day-tasks">
+          <li>Dev4: wireframe 4: quadro Kanban — sidebar + 3 colunas + swimlanes + cartões</li>
+          <li>Dev4: wireframe 5: modal de criação/edição de cartão — todos os campos obrigatórios</li>
+          <li>Dev4: wireframe 6: modal de criação de swimlane</li>
+          <li>Dev5: storyboard 2: cenário "Criar cartão e mover entre colunas"</li>
+          <li>Dev5: storyboard 3: cenário "Configurar WIP limit e ser bloqueado"</li>
+        </ul>
+        <div class="day-deliverable sage">Wireframes 4–6 + Storyboards 2 e 3</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 18 — Quarta</div>
+        <div class="day-title">Wireframes — Métricas + finalizar Artefato 6</div>
+        <ul class="day-tasks">
+          <li>Dev4: wireframe 7: dashboard de métricas — 4 cards de KPI + 2 gráficos Plotly</li>
+          <li>Dev4: wireframe 8: configurações do projeto — nome, membros, WIP limits</li>
+          <li>Dev5: storyboard 4: cenário "Gerente analisa cycle time e throughput"</li>
+          <li>Dev5: montar Artefato 6 completo — todos storyboards com sequência de wireframes</li>
+          <li>Dev5: exportar Artefato 6 como PDF</li>
+        </ul>
+        <div class="day-deliverable">Artefato 6: Storyboards + Wireframes completo em PDF</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 19 — Quinta</div>
+        <div class="day-title">Serviços base + AuthService</div>
+        <ul class="day-tasks">
+          <li>Dev1: criar services/auth_service.py — funções: registrar(), autenticar(), gerar_token()</li>
+          <li>Dev1: implementar hash de senha com bcrypt</li>
+          <li>Dev1: implementar verificação de senha no login</li>
+          <li>Dev1: criar tests/test_auth.py — testar registro, login correto e login errado</li>
+          <li>Dev3: criar services/metrics_service.py — funções stub (calcular_cycle_time, etc)</li>
+        </ul>
+        <div class="day-deliverable sage">AuthService funcionando com testes passando</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 20 — Sexta</div>
+        <div class="day-title">Sprint Review 2 + Sprint Planning 3</div>
+        <ul class="day-tasks">
+          <li>Todos: Review — apresentar Artefatos 5, 6, 7 e código de infraestrutura</li>
+          <li>Verificar critérios de avaliação: tabelas descritas? storyboards completos? arquitetura clara?</li>
+          <li>Fechar Issues do Sprint 2 no Projects</li>
+          <li>Todos: Planning Sprint 3 — dividir Issues de implementação por dev</li>
+          <li>Criar Issues de implementação para cada US (US-01 a US-15 vira código)</li>
+          <li>Estimar tamanho: S/M/L para cada Issue</li>
+        </ul>
+        <div class="day-deliverable gold">Sprint 2 encerrado · Sprint 3 com todos cartões criados</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SPRINT 3 ═══════ -->
+<div class="container">
+  <div id="sprint3" class="section-header">
+    <div class="section-label">Semanas 5–6</div>
+    <h2 class="section-title">Sprint 3 — Desenvolvimento do Protótipo</h2>
+  </div>
+
+  <div class="sprint-block">
+    <div class="sprint-block-header s3">
+      <div class="sprint-num-large" style="color:var(--p3)">03</div>
+      <div class="sprint-meta">
+        <h3>Objetivo: sistema funcional completo (Artefato 8)</h3>
+        <p>Entregas: Autenticação · CRUD completo · Mover cartões · WIP limit · Métricas · UI integrada · 8 pratos de exemplo</p>
+      </div>
+    </div>
+    <div class="daily-grid">
+
+      <div class="day-block">
+        <div class="day-label">Dia 21 — Segunda</div>
+        <div class="day-title">Tela de Login + Registro</div>
+        <ul class="day-tasks">
+          <li>Dev1: implementar pages/01_login.py — formulário Streamlit com st.text_input</li>
+          <li>Dev1: ao submeter: chamar auth_service.autenticar() e salvar em st.session_state["user"]</li>
+          <li>Dev1: implementar pages/02_register.py — formulário e chamada auth_service.registrar()</li>
+          <li>Dev4: adicionar redirecionamento: se não autenticado → vai para login</li>
+          <li>Dev4: estilizar login com CSS customizado</li>
+          <li>Testar: criar conta → fazer login → sessão ativa</li>
+        </ul>
+        <div class="day-deliverable">Login e registro funcionando end-to-end</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 22 — Terça</div>
+        <div class="day-title">CRUD de Quadro</div>
+        <ul class="day-tasks">
+          <li>Dev2: implementar kanban_service.criar_board(user_id, nome, wip_todo, wip_doing)</li>
+          <li>Dev2: implementar kanban_service.listar_boards(user_id)</li>
+          <li>Dev2: implementar kanban_service.atualizar_board() e deletar_board()</li>
+          <li>Dev4: criar pages/00_home.py — lista de boards do usuário + botão criar</li>
+          <li>Dev4: modal de criação de board com nome e configuração de WIP</li>
+          <li>Dev2: criar tests/test_kanban.py — testar CRUD de board</li>
+        </ul>
+        <div class="day-deliverable sage">CRUD de Quadro funcionando na UI</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 23 — Quarta</div>
+        <div class="day-title">CRUD de Swimlane</div>
+        <ul class="day-tasks">
+          <li>Dev2: implementar kanban_service.criar_swimlane(), listar, atualizar, deletar</li>
+          <li>Dev4: na página do board, mostrar botão "+ Swimlane" acima das colunas</li>
+          <li>Dev4: cada swimlane renderizada como uma faixa horizontal no quadro</li>
+          <li>Dev2: ordenar swimlanes por campo position</li>
+          <li>Dev2: testar criação e listagem de swimlanes vinculadas a board</li>
+        </ul>
+        <div class="day-deliverable">Swimlanes visíveis e editáveis no quadro</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 24 — Quinta</div>
+        <div class="day-title">CRUD de Cartão</div>
+        <ul class="day-tasks">
+          <li>Dev2: implementar kanban_service.criar_card() com todos os campos obrigatórios</li>
+          <li>Dev2: implementar buscar, atualizar, deletar cartão</li>
+          <li>Dev4: criar components/kan_card.py — componente visual de cartão com todos os campos</li>
+          <li>Dev4: botão "+ Cartão" por coluna — abre formulário com campos: nome, responsável, data limite, prioridade, descrição</li>
+          <li>Dev4: renderizar cartões na coluna correta por swimlane</li>
+          <li>Dev2: setar created_at automaticamente na criação</li>
+        </ul>
+        <div class="day-deliverable sage">Cartões criados e renderizados no quadro visual</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 25 — Sexta</div>
+        <div class="day-title">Mover cartões + WIP limit</div>
+        <ul class="day-tasks">
+          <li>Dev2: implementar kanban_service.mover_card(card_id, nova_coluna) — atualiza campo column + started_at/finished_at</li>
+          <li>Dev2: implementar mover_card_swimlane(card_id, novo_swimlane_id)</li>
+          <li>Dev2: implementar verificar_wip_limit(board_id, coluna) — raise Exception se cheio</li>
+          <li>Dev4: botões "→" em cada cartão para mover para próxima coluna</li>
+          <li>Dev4: exibir aviso visual (cor vermelha) quando WIP limit é atingido</li>
+          <li>Dev3: registrar em activity_log cada vez que um cartão muda de coluna</li>
+        </ul>
+        <div class="day-deliverable">Mover cartões + WIP limit bloqueante funcionando</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 26 — Segunda (semana 6)</div>
+        <div class="day-title">Métricas — Cycle Time e Lead Time</div>
+        <ul class="day-tasks">
+          <li>Dev3: implementar metrics_service.calcular_cycle_time(card) = finished_at − started_at</li>
+          <li>Dev3: implementar metrics_service.calcular_lead_time(card) = finished_at − created_at</li>
+          <li>Dev3: implementar calcular_cycle_time_medio(board_id) — média de todos os cartões FEITO</li>
+          <li>Dev3: criar tests/test_metrics.py — testar com cartões mock com datas fixas</li>
+          <li>Dev4: exibir cycle time e lead time no hover/detalhe de cada cartão</li>
+        </ul>
+        <div class="day-deliverable sage">Cycle Time e Lead Time calculados e exibidos</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 27 — Terça</div>
+        <div class="day-title">Métricas — Throughput e WIP + Dashboard</div>
+        <ul class="day-tasks">
+          <li>Dev3: implementar calcular_throughput(board_id, dias=7) — COUNT cartões FEITO na janela</li>
+          <li>Dev3: implementar calcular_wip_atual(board_id) — COUNT cartões em FAZENDO</li>
+          <li>Dev3: implementar historico_throughput(board_id) — throughput por semana (últimas 6)</li>
+          <li>Dev3: criar pages/03_metrics.py com Plotly: gráfico de barras (throughput) + donut (prioridade)</li>
+          <li>Dev4: adicionar 4 metric cards no topo do dashboard</li>
+        </ul>
+        <div class="day-deliverable">Dashboard de métricas completo com 4 gráficos</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 28 — Quarta</div>
+        <div class="day-title">Dados do Restaurante + Integração</div>
+        <ul class="day-tasks">
+          <li>Dev5: criar script seed_data.py — popular banco com restaurante "Ristorante da Nonna"</li>
+          <li>8 pratos: Carbonara, Bolonhesa, Risotto Porcini, Fettuccine Alfredo, Ossobuco, Tiramisu, Pizza Margherita, Panna Cotta</li>
+          <li>Criar cartões para cada prato (tarefas de preparo, ingredientes, treinamento)</li>
+          <li>Dev4: testar fluxo completo: login → ver board → criar cartão → mover → ver métrica</li>
+          <li>Dev1: garantir logout funcionando e limpando sessão</li>
+        </ul>
+        <div class="day-deliverable sage">Sistema com dados reais do restaurante, fluxo end-to-end ok</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 29 — Quinta</div>
+        <div class="day-title">Testes + Polimentos de UI</div>
+        <ul class="day-tasks">
+          <li>Dev5: rodar pytest completo e corrigir falhas</li>
+          <li>Dev3: adicionar test_wip.py — testar que WIP limit bloqueia corretamente</li>
+          <li>Dev4: polir CSS — cores, espaçamento, responsividade</li>
+          <li>Dev4: adicionar sidebar com navegação entre páginas</li>
+          <li>Dev1: testar cenários de erro: login errado, cartão sem campo obrigatório</li>
+          <li>Dev2: testar mover cartão quando WIP está cheio</li>
+        </ul>
+        <div class="day-deliverable">pytest verde + UI polida e navegável</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 30 — Sexta</div>
+        <div class="day-title">Sprint Review 3 + Planning 4</div>
+        <ul class="day-tasks">
+          <li>Todos: demo do sistema completo — rodar localmente e mostrar cada funcionalidade</li>
+          <li>Checar: todos os serviços do requisito estão implementados?</li>
+          <li>Criar lista de bugs/ajustes para Sprint 4</li>
+          <li>Todos: Planning Sprint 4 — criar Issues de teste, vídeo, infra, PDFs finais</li>
+          <li>Fechar todos os Issues de implementação no Projects</li>
+        </ul>
+        <div class="day-deliverable gold">Protótipo funcional completo · Sprint 4 planejado</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SPRINT 4 ═══════ -->
+<div class="container">
+  <div id="sprint4" class="section-header">
+    <div class="section-label">Semanas 7–8</div>
+    <h2 class="section-title">Sprint 4 — Testes, Infraestrutura & Entrega</h2>
+  </div>
+
+  <div class="sprint-block">
+    <div class="sprint-block-header s4">
+      <div class="sprint-num-large" style="color:var(--p4)">04</div>
+      <div class="sprint-meta">
+        <h3>Objetivo: empacotamento e entrega de todos os 9 artefatos</h3>
+        <p>Entregas: Vídeo de sistema · Artefato de Infra · PDFs revisados · ZIP final · Teste de descompactação</p>
+      </div>
+    </div>
+    <div class="daily-grid">
+
+      <div class="day-block">
+        <div class="day-label">Dia 31–32</div>
+        <div class="day-title">Roteiro do vídeo + gravação</div>
+        <ul class="day-tasks">
+          <li>Dev5: escrever roteiro do vídeo — 1 cenário de sucesso por serviço (14 serviços)</li>
+          <li>Ordem: login → criar quadro → criar swimlane → criar cartão → mover coluna → mover swimlane → WIP limit → cycle time → lead time → throughput → WIP → editar cartão → excluir cartão → logout</li>
+          <li>Dev4: gravar vídeo (OBS ou Loom) — narrar cada ação em voz over</li>
+          <li>Dev5: editar vídeo — cortar silêncios, adicionar legenda de serviço testado</li>
+        </ul>
+        <div class="day-deliverable blue">Vídeo de teste de sistema gravado e editado (Artefato 8)</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 33–34</div>
+        <div class="day-title">Infraestrutura + Artefato 9</div>
+        <ul class="day-tasks">
+          <li>Dev1: escrever Artefato 9 — Hardware: máquina com 2GB RAM, 10GB disco, qualquer SO</li>
+          <li>Dev1: Software: Python 3.11, pip, Streamlit, SQLite (embutido), dependências do requirements.txt</li>
+          <li>Dev1: descrever como rodar: git clone → pip install -r requirements.txt → streamlit run app.py</li>
+          <li>Dev3: criar Dockerfile opcional — FROM python:3.11-slim, COPY, RUN pip install, CMD streamlit</li>
+          <li>Dev5: exportar Artefato 9 como PDF</li>
+        </ul>
+        <div class="day-deliverable">Artefato 9: Infraestrutura completo em PDF</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 35–36</div>
+        <div class="day-title">Revisão geral de todos os artefatos</div>
+        <ul class="day-tasks">
+          <li>Dev5: checar ortografia de todos os 9 artefatos (usar corretor + leitura humana)</li>
+          <li>Checar cada critério de avaliação do PDF original — marcar como ✅ ou ❌</li>
+          <li>Artefato 1: tem screenshot do Projects? Lista cada cartão com info?</li>
+          <li>Artefato 5: descreve impacto do Streamlit/SQLAlchemy? Tem perspectivas?</li>
+          <li>Artefato 6: cada storyboard tem sequência de wireframes?</li>
+          <li>Artefato 7: cada tabela tem descrição textual do propósito?</li>
+          <li>Todos: corrigir pendências identificadas</li>
+        </ul>
+        <div class="day-deliverable sage">Todos os 9 artefatos revisados e aprovados pelo grupo</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 37–38</div>
+        <div class="day-title">Documento de contribuições + empacotamento</div>
+        <ul class="day-tasks">
+          <li>Dev5: criar documento listando quais artefatos cada membro construiu (requisito 6 das instruções)</li>
+          <li>Gerar todos os PDFs finais — verificar que nenhum está corrompido</li>
+          <li>Dev1: criar arquivo ZIP com nomenclatura: ESW-MAT1-MAT2-MAT3-MAT4-MAT5.zip</li>
+          <li>Incluir no ZIP: todos os PDFs + código-fonte + vídeo (ou link)</li>
+          <li>Testar descompactação em outro computador</li>
+          <li>Escanear ZIP com antivírus</li>
+        </ul>
+        <div class="day-deliverable">ZIP criado, testado e sem vírus</div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-label">Dia 39</div>
+        <div class="day-title">Sprint Review Final + Envio</div>
+        <ul class="day-tasks">
+          <li>Todos: demo final do sistema completo</li>
+          <li>Verificar checklist completo de critérios de avaliação</li>
+          <li>Fechar todos os Issues e Milestones no GitHub Projects</li>
+          <li>Fazer tag de release: git tag v1.0.0 && git push --tags</li>
+          <li>Enviar ZIP dentro do prazo</li>
+          <li>Guardar comprovante de envio</li>
+        </ul>
+        <div class="day-deliverable blue">KanBite entregue · Projeto concluído ✓</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PLANOS INDIVIDUAIS ═══════ -->
+<div class="container">
+  <div class="section-header">
+    <div class="section-label">Responsabilidades</div>
+    <h2 class="section-title">Planos individuais detalhados — 5 desenvolvedores</h2>
+  </div>
+
+  <div class="programmers-grid">
+
+    <!-- DEV 1 -->
+    <div class="programmer-card" id="prog1">
+      <div class="programmer-header">
+        <div class="programmer-avatar av-1">D1</div>
+        <div class="programmer-info">
+          <h3>Dev 1 — Tech Lead & Auth</h3>
+          <div class="role">Autenticação · Arquitetura · Code Review · Infraestrutura</div>
+        </div>
+      </div>
+      <div class="programmer-body">
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s1">Sprint 1</div>
+          <ul class="prog-tasks">
+            <li class="s1">Criar repositório GitHub com configurações de proteção</li>
+            <li class="s1">Configurar GitHub Projects com colunas e labels</li>
+            <li class="s1">Escrever seção "Posição no mercado" do Documento de Visão</li>
+            <li class="s1">Finalizar Artefato 3 (RNF) — segurança, interface, licença</li>
+            <li class="s1">Criar models/user.py com campos e validações Pydantic</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s2">Sprint 2</div>
+          <ul class="prog-tasks">
+            <li class="s2">Liderar escrita do Architecture Notebook (decisões, suposições)</li>
+            <li class="s2">Criar database/repos/user_repo.py — criar_usuario, buscar_por_email</li>
+            <li class="s2">Criar services/auth_service.py — registrar, autenticar, hash bcrypt</li>
+            <li class="s2">Criar tests/test_auth.py com casos de sucesso e falha</li>
+            <li class="s2">Fazer code review dos PRs de Dev 2 e Dev 3</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s3">Sprint 3</div>
+          <ul class="prog-tasks">
+            <li class="s3">Implementar pages/01_login.py — formulário + chamada auth_service</li>
+            <li class="s3">Implementar pages/02_register.py — validações + feedback</li>
+            <li class="s3">Implementar logout e limpeza de session_state</li>
+            <li class="s3">Garantir guard de autenticação em todas as páginas</li>
+            <li class="s3">Testar cenários de segurança: senha errada, email duplicado</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s4">Sprint 4</div>
+          <ul class="prog-tasks">
+            <li class="s4">Escrever Artefato 9 completo (Infraestrutura)</li>
+            <li class="s4">Criar Dockerfile e instruções de deploy</li>
+            <li class="s4">Fazer code review final de todos os PRs pendentes</li>
+            <li class="s4">Criar tag v1.0.0 e release notes no GitHub</li>
+          </ul>
+        </div>
+
+        <div class="cards-section">
+          <div class="cards-label">Cartões GitHub a criar (Issues)</div>
+          <div class="gh-card-list">
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[SETUP] Criar repositório e configurar GitHub Projects</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill muted">type: infra</span>
+                <span class="meta-pill muted">Sprint 1</span>
+                <span class="meta-pill muted">@dev1 · 2h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[AUTH] Implementar AuthService — registrar e autenticar</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 2</span>
+                <span class="meta-pill muted">@dev1 · 4h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[AUTH] Tela de Login — pages/01_login.py</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3</span>
+                <span class="meta-pill muted">@dev1 · 3h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[AUTH] Tela de Registro — pages/02_register.py</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3</span>
+                <span class="meta-pill muted">@dev1 · 2h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[INFRA] Artefato 9 — Documento de Infraestrutura PDF</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill gold">priority: media</span>
+                <span class="meta-pill pink">type: doc</span>
+                <span class="meta-pill muted">Sprint 4</span>
+                <span class="meta-pill muted">@dev1 · 3h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEV 2 -->
+    <div class="programmer-card" id="prog2">
+      <div class="programmer-header">
+        <div class="programmer-avatar av-2">D2</div>
+        <div class="programmer-info">
+          <h3>Dev 2 — Backend Kanban</h3>
+          <div class="role">CRUD Quadro · Swimlane · Cartão · Mover · WIP Limit</div>
+        </div>
+      </div>
+      <div class="programmer-body">
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s1">Sprint 1</div>
+          <ul class="prog-tasks">
+            <li class="s1">Escrever US-05 a US-08 (Swimlane, Cartão, Mover colunas, Mover swimlane)</li>
+            <li class="s1">Criar Issues US-05 a US-08 no GitHub Projects</li>
+            <li class="s1">Contribuir com revisão das outras US</li>
+            <li class="s1">Criar models/board.py, models/card.py, models/swimlane.py</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s2">Sprint 2</div>
+          <ul class="prog-tasks">
+            <li class="s2">Criar database/repos/board_repo.py — CRUD completo</li>
+            <li class="s2">Criar database/repos/card_repo.py — CRUD + mover_coluna + mover_swimlane</li>
+            <li class="s2">Criar database/repos/swimlane_repo.py — CRUD ordenado por position</li>
+            <li class="s2">Testar repos com fixtures pytest</li>
+            <li class="s2">Descrever mecanismos de arquitetura no Architecture Notebook</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s3">Sprint 3</div>
+          <ul class="prog-tasks">
+            <li class="s3">Implementar kanban_service.py — toda lógica de negócio do board</li>
+            <li class="s3">Implementar mover_card com atualização de started_at/finished_at</li>
+            <li class="s3">Implementar verificar_wip_limit — exception se coluna cheia</li>
+            <li class="s3">Implementar mover_card_swimlane</li>
+            <li class="s3">Criar tests/test_kanban.py com 10+ casos de teste</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s4">Sprint 4</div>
+          <ul class="prog-tasks">
+            <li class="s4">Corrigir bugs encontrados durante gravação do vídeo</li>
+            <li class="s4">Garantir que todos os testes de kanban passam</li>
+            <li class="s4">Revisar PR final de Dev 4 (UI)</li>
+          </ul>
+        </div>
+
+        <div class="cards-section">
+          <div class="cards-label">Cartões GitHub a criar</div>
+          <div class="gh-card-list">
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DB] Criar board_repo, card_repo, swimlane_repo</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 2 · @dev2 · 6h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[KANBAN] KanbanService — CRUD Board, Swimlane, Card</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev2 · 5h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[KANBAN] Mover cartão entre colunas + WIP limit</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev2 · 4h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[KANBAN] Mover cartão entre swimlanes</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill gold">priority: media</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev2 · 2h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[TEST] test_kanban.py — 10 casos de teste</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill gold">priority: media</span>
+                <span class="meta-pill sage">type: test</span>
+                <span class="meta-pill muted">Sprint 3 · @dev2 · 3h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEV 3 -->
+    <div class="programmer-card" id="prog3">
+      <div class="programmer-header">
+        <div class="programmer-avatar av-3">D3</div>
+        <div class="programmer-info">
+          <h3>Dev 3 — Métricas & Banco</h3>
+          <div class="role">SQLAlchemy Engine · MetricsService · Dashboard Plotly · Testes</div>
+        </div>
+      </div>
+      <div class="programmer-body">
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s1">Sprint 1</div>
+          <ul class="prog-tasks">
+            <li class="s1">Escrever US-09 a US-13 (WIP, Cycle Time, Lead Time, Throughput, WIP atual)</li>
+            <li class="s1">Escrever resumo de funcionalidades para o Documento de Visão</li>
+            <li class="s1">Criar database/engine.py — conexão SQLite + sessão SQLAlchemy</li>
+            <li class="s1">Criar database/base.py — Base declarativa + função criar_tabelas()</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s2">Sprint 2</div>
+          <ul class="prog-tasks">
+            <li class="s2">Criar diagrama ER completo (dbdiagram.io)</li>
+            <li class="s2">Documentar cada tabela com propósito textual (Artefato 7)</li>
+            <li class="s2">Adicionar tabela activity_log para rastrear movimentações</li>
+            <li class="s2">Criar stub de metrics_service.py com assinaturas de função</li>
+            <li class="s2">Rodar testes dos repos e garantir que banco inicializa corretamente</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s3">Sprint 3</div>
+          <ul class="prog-tasks">
+            <li class="s3">Implementar calcular_cycle_time, calcular_lead_time</li>
+            <li class="s3">Implementar calcular_throughput por janela de dias</li>
+            <li class="s3">Implementar calcular_wip_atual e historico_throughput</li>
+            <li class="s3">Criar pages/03_metrics.py com Plotly — barras, donut, linha</li>
+            <li class="s3">Criar tests/test_metrics.py e tests/test_wip.py</li>
+            <li class="s3">Registrar eventos em activity_log ao mover cartões</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s4">Sprint 4</div>
+          <ul class="prog-tasks">
+            <li class="s4">Criar Dockerfile opcional para o projeto</li>
+            <li class="s4">Garantir que pytest roda 100% sem erros</li>
+            <li class="s4">Revisar PR de métricas com Dev 4</li>
+          </ul>
+        </div>
+
+        <div class="cards-section">
+          <div class="cards-label">Cartões GitHub a criar</div>
+          <div class="gh-card-list">
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DB] database/engine.py + base.py + criar_tabelas()</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 1 · @dev3 · 3h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DB] Diagrama ER + Artefato 7 completo</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill pink">type: doc</span>
+                <span class="meta-pill muted">Sprint 2 · @dev3 · 4h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[METRICS] MetricsService — cycle time, lead time, throughput, WIP</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev3 · 5h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[METRICS] Dashboard Plotly — pages/03_metrics.py</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev3 · 4h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[TEST] test_metrics.py + test_wip.py</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill gold">priority: media</span>
+                <span class="meta-pill sage">type: test</span>
+                <span class="meta-pill muted">Sprint 3 · @dev3 · 3h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEV 4 -->
+    <div class="programmer-card" id="prog4">
+      <div class="programmer-header">
+        <div class="programmer-avatar av-4">D4</div>
+        <div class="programmer-info">
+          <h3>Dev 4 — Frontend & UI</h3>
+          <div class="role">Streamlit Pages · Componentes · CSS · Wireframes · Vídeo</div>
+        </div>
+      </div>
+      <div class="programmer-body">
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s1">Sprint 1</div>
+          <ul class="prog-tasks">
+            <li class="s1">Criar estrutura de pastas inicial (app.py, pages/, components/)</li>
+            <li class="s1">Configurar navegação multi-page do Streamlit</li>
+            <li class="s1">Criar pages/ com arquivos stub para cada tela</li>
+            <li class="s1">Esboços iniciais de wireframes em papel ou Figma</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s2">Sprint 2</div>
+          <ul class="prog-tasks">
+            <li class="s2">Criar 8 wireframes completos (login, registro, home, board, cartão, swimlane, métricas, config)</li>
+            <li class="s2">Montar 4 storyboards com Dev 5</li>
+            <li class="s2">Escrever impacto do Streamlit no Architecture Notebook</li>
+            <li class="s2">Criar components/kan_card.py — componente visual de cartão</li>
+            <li class="s2">Criar assets/style.css — paleta de cores italiana</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s3">Sprint 3</div>
+          <ul class="prog-tasks">
+            <li class="s3">Implementar pages/04_board.py — renderizar board completo com swimlanes e cartões</li>
+            <li class="s3">Implementar pages/00_home.py — lista de projetos</li>
+            <li class="s3">Implementar botões de mover cartão entre colunas</li>
+            <li class="s3">Implementar formulário de criar/editar cartão (modal via st.form)</li>
+            <li class="s3">Implementar sidebar.py com navegação e nome do usuário logado</li>
+            <li class="s3">Polir CSS — responsividade, cores, badges de prioridade</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s4">Sprint 4</div>
+          <ul class="prog-tasks">
+            <li class="s4">Gravar vídeo de teste de sistema (roteiro do Dev 5)</li>
+            <li class="s4">Corrigir bugs visuais encontrados durante gravação</li>
+            <li class="s4">Garantir que UI está alinhada com wireframes do Artefato 6</li>
+          </ul>
+        </div>
+
+        <div class="cards-section">
+          <div class="cards-label">Cartões GitHub a criar</div>
+          <div class="gh-card-list">
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[UI] Setup app.py + navegação multi-page Streamlit</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 1 · @dev4 · 2h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[UI] 8 Wireframes + 4 Storyboards (Artefato 6)</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill pink">type: doc</span>
+                <span class="meta-pill muted">Sprint 2 · @dev4 · 6h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[UI] pages/04_board.py — quadro Kanban visual completo</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev4 · 6h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[UI] components/kan_card.py + sidebar.py</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill gold">priority: media</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev4 · 3h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[VIDEO] Gravar teste de sistema — todos os serviços</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill muted">type: infra</span>
+                <span class="meta-pill muted">Sprint 4 · @dev4 · 4h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEV 5 -->
+    <div class="programmer-card" id="prog5">
+      <div class="programmer-header">
+        <div class="programmer-avatar av-5">D5</div>
+        <div class="programmer-info">
+          <h3>Dev 5 — Docs & QA</h3>
+          <div class="role">Todos os Artefatos · pytest · Seed Data · Empacotamento · Entrega</div>
+        </div>
+      </div>
+      <div class="programmer-body">
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s1">Sprint 1</div>
+          <ul class="prog-tasks">
+            <li class="s1">Criar todos os Milestones (Sprint 1–4) no GitHub</li>
+            <li class="s1">Escrever Artefato 1 — processo de gerenciamento com screenshots</li>
+            <li class="s1">Escrever Artefato 2 — Visão e Escopo (seções principais)</li>
+            <li class="s1">Organizar US-01 a US-15 em Artefato 4 com formato correto</li>
+            <li class="s1">Criar requirements.txt inicial e conftest.py do pytest</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s2">Sprint 2</div>
+          <ul class="prog-tasks">
+            <li class="s2">Organizar e exportar Artefato 5 (Architecture Notebook) como PDF</li>
+            <li class="s2">Montar Artefato 6 — storyboards com sequência de wireframes do Dev 4</li>
+            <li class="s2">Montar Artefato 7 — diagrama ER + texto descritivo do Dev 3</li>
+            <li class="s2">Gerar PDFs de artefatos 1, 2, 3, 4, 5, 6, 7</li>
+            <li class="s2">Criar pasta docs/ no repositório com todos os PDFs</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s3">Sprint 3</div>
+          <ul class="prog-tasks">
+            <li class="s3">Criar seed_data.py com restaurante e 8 pratos italianos</li>
+            <li class="s3">Criar cartões de exemplo para cada prato (tarefas realistas)</li>
+            <li class="s3">Rodar pytest completo e reportar falhas para os devs</li>
+            <li class="s3">Escrever roteiro do vídeo — 1 cenário de sucesso por serviço</li>
+            <li class="s3">Atualizar Artefato 1 com screenshots do Projects atualizado</li>
+          </ul>
+        </div>
+        <div class="prog-sprint">
+          <div class="prog-sprint-label s4">Sprint 4</div>
+          <ul class="prog-tasks">
+            <li class="s4">Revisar ortografia de todos os 9 artefatos</li>
+            <li class="s4">Criar documento de contribuições por membro</li>
+            <li class="s4">Criar arquivo ZIP com nomenclatura correta</li>
+            <li class="s4">Testar descompactação + antivírus</li>
+            <li class="s4">Coordenar e confirmar envio dentro do prazo</li>
+          </ul>
+        </div>
+
+        <div class="cards-section">
+          <div class="cards-label">Cartões GitHub a criar</div>
+          <div class="gh-card-list">
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DOC] Artefato 1 — Gerenciamento Kanban + screenshots</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill pink">type: doc</span>
+                <span class="meta-pill muted">Sprint 1 · @dev5 · 3h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DOC] Artefato 2 — Visão e Escopo PDF</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill pink">type: doc</span>
+                <span class="meta-pill muted">Sprint 1 · @dev5 · 4h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DOC] Artefatos 5, 6, 7 — exportar como PDFs finais</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill pink">type: doc</span>
+                <span class="meta-pill muted">Sprint 2 · @dev5 · 4h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[DATA] seed_data.py — restaurante + 8 pratos italianos</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill gold">priority: media</span>
+                <span class="meta-pill blue">type: feature</span>
+                <span class="meta-pill muted">Sprint 3 · @dev5 · 2h</span>
+              </div>
+            </div>
+            <div class="gh-card-item">
+              <div class="gh-card-item-title">[ENTREGA] Criar ZIP ESW-*.zip + testar + enviar</div>
+              <div class="gh-card-item-meta">
+                <span class="meta-pill terra">priority: alta</span>
+                <span class="meta-pill muted">type: infra</span>
+                <span class="meta-pill muted">Sprint 4 · @dev5 · 2h</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <span><strong>KanBite</strong> · Plano de Execução · 5 Devs · 4 Sprints · ~39 dias de desenvolvimento</span>
+  <span>GitHub Projects · Python · Streamlit · SQLite · pytest</span>
+</footer>
+
+</body>
+</html>
