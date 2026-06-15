@@ -4,6 +4,7 @@ Dev 1 - Sprint 1 (estrutura) / Sprint 3 (completo)
 """
 import bcrypt
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from models.user import User
 
 
@@ -26,12 +27,15 @@ def registrar(session: Session, username: str, email: str, senha: str) -> User:
     ).first()
     if existente:
         raise UsuarioJaExisteError(f"Username ou email ja existe.")
-    usuario = User(username=username, email=email, hashed_password=_hash_senha(senha))
-    session.add(usuario)
-    session.commit()
-    session.refresh(usuario)
-    return usuario
-
+    try:
+        usuario = User(username=username, email=email, hashed_password=_hash_senha(senha))
+        session.add(usuario)
+        session.commit()
+        session.refresh(usuario)
+        return usuario
+    except IntegrityError:
+        session.rollback()
+        raise UsuarioJaExisteError("Error de integridade: Username ou email ja cadastrado.")
 
 def autenticar(session: Session, username: str, senha: str) -> User:
     usuario = session.query(User).filter(User.username == username).first()
