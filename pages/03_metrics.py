@@ -15,6 +15,8 @@ if "user_id" not in st.session_state:
     st.stop()
 
 st.set_page_config(page_title="Métricas — KanBite", page_icon="📊", layout="wide")
+from components.sidebar import render_sidebar
+render_sidebar()
 st.title("📊 Métricas do Projeto")
 
 session = get_session()

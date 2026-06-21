@@ -1,6 +1,6 @@
 ﻿"""
 pages/04_board.py - Quadro Kanban Visual
-Dev 4 - Sprint 4 (swimlanes + edicao de card)
+Dev 4 - Sprint 4 (swimlanes + edicao de card + components)
 """
 import streamlit as st
 from database.engine import get_session
@@ -12,6 +12,10 @@ from services.kanban_service import (
     WipLimitError, CardNaoEncontradoError,
 )
 from models.card import Coluna
+from components.sidebar import render_sidebar
+from components.kan_card import render_card
+
+render_sidebar()
 
 # ── Autenticação ──────────────────────────────────────────────────────────────
 if "user_id" not in st.session_state:
@@ -94,12 +98,7 @@ for coluna_enum, col_ui in colunas_ui.items():
                 label_card += f" · 🏊 {nome_swimlane_atual}"
 
             with st.expander(label_card, expanded=False):
-                st.write(f"👤 **Responsável:** {card.responsible}")
-                st.write(f"🎯 **Prioridade:** {card.priority.value.capitalize()}")
-                if card.description:
-                    st.write(f"📝 **Descrição:** {card.description}")
-                if card.due_date:
-                    st.write(f"📅 **Prazo:** {card.due_date.strftime('%d/%m/%Y')}")
+                render_card(card, show_actions=True)
 
                 # Mover entre swimlanes
                 if swimlanes:

@@ -7,6 +7,8 @@ from database.engine import get_session
 from services.auth_service import registrar, UsuarioJaExisteError
 
 st.set_page_config(page_title="Cadastro — KanBite", page_icon="📝")
+from components.sidebar import render_sidebar
+render_sidebar()
 
 if "user_id" in st.session_state:
     st.info(f"Você já possui uma conta: **{st.session_state['username']}**.")
