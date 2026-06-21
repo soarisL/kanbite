@@ -1,6 +1,6 @@
 ﻿"""
 pages/04_board.py - Quadro Kanban Visual
-Dev 4 - Sprint 4 (swimlanes)
+Dev 4 - Sprint 4 (swimlanes + edicao de card)
 """
 import streamlit as st
 from database.engine import get_session
@@ -114,6 +114,29 @@ for coluna_enum, col_ui in colunas_ui.items():
                     )
                     if sw_sel != card.swimlane_id:
                         mover_swimlane(session, card.id, sw_sel)
+                        st.rerun()
+
+                # Editar cartão
+                with st.popover("✏️ Editar"):
+                    with st.form(f"form_editar_{card.id}"):
+                        novo_titulo = st.text_input("Título", value=card.title)
+                        novo_resp   = st.text_input("Responsável", value=card.responsible)
+                        nova_prio   = st.selectbox(
+                            "Prioridade", ["baixa", "media", "alta"],
+                            index=["baixa", "media", "alta"].index(card.priority.value),
+                        )
+                        nova_desc   = st.text_area("Descrição", value=card.description or "")
+                        salvar = st.form_submit_button("💾 Salvar alterações")
+
+                    if salvar:
+                        atualizar_card(
+                            session, card.id,
+                            title=novo_titulo,
+                            responsible=novo_resp,
+                            priority=nova_prio,
+                            description=nova_desc,
+                        )
+                        st.success("Cartão atualizado!")
                         st.rerun()
 
                 # Botões de mover
