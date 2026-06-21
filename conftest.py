@@ -1,6 +1,6 @@
 ﻿"""
 conftest.py - Configuracao global do pytest
-Dev 5 - Sprint 1, Dia 1
+Dev 5 - Sprint 1, Dia 1 (corrigido: isolamento real entre testes)
 """
 import pytest
 from sqlalchemy import create_engine
@@ -12,14 +12,20 @@ except ImportError:
     Base = None
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_engine():
+    """
+    Escopo 'function': cada teste ganha um banco SQLite em memoria
+    novo e vazio. Isso elimina vazamento de dados entre testes,
+    mesmo quando o teste faz session.commit() no meio do caminho.
+    """
     engine = create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
     if Base is not None:
         Base.metadata.create_all(engine)
     yield engine
     if Base is not None:
         Base.metadata.drop_all(engine)
+    engine.dispose()
 
 
 @pytest.fixture(scope="function")
@@ -27,7 +33,6 @@ def db_session(test_engine):
     Session = sessionmaker(bind=test_engine)
     session = Session()
     yield session
-    session.rollback()
     session.close()
 
 

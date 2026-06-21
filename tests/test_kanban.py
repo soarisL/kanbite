@@ -27,11 +27,13 @@ class TestBoard:
 @pytest.mark.skipif(not MODULES_READY, reason="kanban_service nao implementado")
 class TestCard:
     def test_criar_card(self, db_session):
-        card = criar_card(db_session, board_id=1, title="Preparar Carbonara", responsible="Chef Mario")
+        board = criar_board(db_session, owner_id=1, name="Board Teste", wip_doing=3)
+        card = criar_card(db_session, board_id=board.id, title="Preparar Carbonara", responsible="Chef Mario")
         assert card.column == Coluna.A_FAZER
         assert card.started_at is None
 
     def test_mover_para_fazendo(self, db_session):
-        card = criar_card(db_session, board_id=1, title="Teste", responsible="Dev")
+        board = criar_board(db_session, owner_id=1, name="Board Teste", wip_doing=3)
+        card = criar_card(db_session, board_id=board.id, title="Teste", responsible="Dev")
         card = mover_card(db_session, card.id, Coluna.FAZENDO)
         assert card.started_at is not None
