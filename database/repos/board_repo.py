@@ -1,69 +1,92 @@
-﻿# TODO: Dev2 implementar CRUD de Board
+﻿"""
+database/repos/board_repo.py - Repositorio de Board (CRUD)
+Dev 2 - Sprint 3
 
+Responsabilidade: acesso a dados da tabela 'boards'.
+Todas as operacoes usam flush() ao inves de commit() para que
+a camada de servico controle as transacoes.
 """
-Repositories/board_repo.py - Repositório de Boards
-"""
-
-from sqlalchemy.orm import Session 
-'''
-* Biblioteca que faz o mapeamento das classes de python para tabelas
-de bancos de dados relacional -> Manipula dados de objetos
-* Session: Mecanismo central que gerencia os objetos
-    -> Estabelece a conversa
-    -> Acumula as alterações e joga para o banco
-'''
+from sqlalchemy.orm import Session
 from models.board import Board
 
-class BoardRepository:
 
-    def __init__(self, db: Session):
-        self.db = db
-        
-    def create_board(self, name: str, owner_id: int, wip_todo: int = 0, wip_doing: int = 3) -> Board:
-        '''
-        name -> espera uma string
-        owned_id -> int
-        wip_todo -> int com valor 0 -> sem limite (pode ter várias tarefas)
-        wip_doing -> int com valor 3 -> so podem ter 3 projetos em andamento
-        '''
+class BoardRepo:
+    """Repositorio responsavel pelo CRUD de quadros Kanban."""
+
+    def __init__(self, session: Session):
+        self.session = session
+
+    # ── CREATE ──────────────────────────────────────────────────────────────
+
+    def criar(self, owner_id: int, name: str,
+              wip_todo: int = 0, wip_doing: int = 3) -> Board:
+        """
+        Cria um novo Board e persiste na sessao.
+        Nao faz commit — a transacao fica aberta para o chamador encerrar.
+        """
         board = Board(
-            name=name,
             owner_id=owner_id,
+            name=name,
             wip_todo=wip_todo,
-            wip_doing=wip_doing
-
+            wip_doing=wip_doing,
         )
-        self.db.add(board)
-        self.db.commit()
-        self.db.refresh(board)
+        self.session.add(board)
+        self.session.flush()   # gera o ID sem commitar
         return board
-    
-    def get_by_id(self, board_id: int) -> Board | None:
-        return self.db.query(Board).filter(Board.id == board_id).first()
-    
-    def get_by_owned(self, owned_id: int) -> Board | None:
-        return self.db.query(Board).filter(Board.owner_id == owned_id).all()
-    
-    # Atualiza os nomes -> coloca nomes no bd
-    def update_name(self, board_id: int, new_name: str) -> Board | None:
-        board = self.get_by_id(board_id)
+
+    # ── READ ────────────────────────────────────────────────────────────────
+
+    def buscar_por_id(self, board_id: int) -> Board | None:
+        """Retorna o Board com o ID informado, ou None se nao existir."""
+        return self.session.get(Board, board_id)
+
+    def listar_por_usuario(self, user_id: int) -> list[Board]:
+        """Retorna todos os boards de um usuario, ordenados por data de criacao."""
+        return (self.session.query(Board)
+                .filter(Board.owner_id == user_id)
+                .order_by(Board.created_at)
+                .all())
+
+    def existe(self, board_id: int) -> bool:
+        """Verifica se um board com o ID existe."""
+        return self.buscar_por_id(board_id) is not None
+
+    # ── UPDATE ──────────────────────────────────────────────────────────────
+
+    def atualizar_nome(self, board_id: int, novo_nome: str) -> Board | None:
+        """
+        Atualiza o nome de um Board.
+        Retorna o Board atualizado, ou None se nao encontrado.
+        """
+        board = self.buscar_por_id(board_id)
         if not board:
             return None
-        
-        # Coloca o novo nome da tarefa
-        board.name = new_name
-        # Adiciona no bd
-        self.db.commit()
-        # Atualiza
-        self.db.refresh(board)
+        board.name = novo_nome
+        self.session.flush()
         return board
-    
-    # Deleta o nome -> Apaga a tarefea
-    def delete_board(self, board_id: int) -> bool:
-        board = self.get_by_id(board_id)
-        if not board: 
+
+    def atualizar_wip(self, board_id: int, wip_doing: int) -> Board | None:
+        """
+        Atualiza o WIP limit da coluna FAZENDO.
+        wip_doing = 0 significa sem limite.
+        """
+        board = self.buscar_por_id(board_id)
+        if not board:
+            return None
+        board.wip_doing = wip_doing
+        self.session.flush()
+        return board
+
+    # ── DELETE ──────────────────────────────────────────────────────────────
+
+    def deletar(self, board_id: int) -> bool:
+        """
+        Remove um Board e todos os seus cards/swimlanes (cascade no model).
+        Retorna True se deletou, False se nao encontrou.
+        """
+        board = self.buscar_por_id(board_id)
+        if not board:
             return False
-        
-        self.db.delete(board)
-        self.db.commit()
+        self.session.delete(board)
+        self.session.flush()
         return True

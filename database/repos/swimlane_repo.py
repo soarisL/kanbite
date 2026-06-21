@@ -1,67 +1,86 @@
+
+"""
+database/repos/swimlane_repo.py - Repositorio de Swimlane (CRUD)
+Dev 2 - Sprint 3
+
+Responsabilidade: acesso a dados da tabela 'swimlanes'.
+Swimlanes sao raias horizontais do quadro Kanban que permitem
+agrupar cards por categoria, responsavel ou qualquer criterio.
+"""
+
 from sqlalchemy.orm import Session
 from models.swimlane import Swimlane
 
 
-class SwimlaneRepository:
+class SwimlaneRepo:
+    """Repositorio responsavel pelo CRUD de swimlanes (raias)."""
 
-    def __init__(self, db: Session):
-        self.db = db
+    def __init__(self, session: Session):
+        self.session = session
 
-    def create_swimlane(
-        self,
-        board_id: int,
-        name: str,
-        position: int = 0
-    ) -> Swimlane:
+    # ── CREATE ──────────────────────────────────────────────────────────────
 
-        lane = Swimlane(
+    def criar(self, board_id: int, name: str, position: int = 0) -> Swimlane:
+        """
+        Cria uma nova swimlane em um board.
+        position define a ordem de exibicao (0 = primeira).
+        """
+        swimlane = Swimlane(
             board_id=board_id,
             name=name,
-            position=position
+            position=position,
         )
+        self.session.add(swimlane)
+        self.session.flush()
+        return swimlane
 
-        self.db.add(lane)
-        self.db.commit()
-        self.db.refresh(lane)
+    # ── READ ────────────────────────────────────────────────────────────────
 
-        return lane
+    def buscar_por_id(self, swimlane_id: int) -> Swimlane | None:
+        """Retorna a Swimlane com o ID informado, ou None."""
+        return self.session.get(Swimlane, swimlane_id)
 
-    def get_by_id(self, lane_id: int):
-        return self.db.query(Swimlane).filter(
-            Swimlane.id == lane_id
-        ).first()
+    def listar_por_board(self, board_id: int) -> list[Swimlane]:
+        """
+        Retorna todas as swimlanes de um board,
+        ordenadas por position (crescente).
+        """
+        return (self.session.query(Swimlane)
+                .filter(Swimlane.board_id == board_id)
+                .order_by(Swimlane.position)
+                .all())
 
-    def get_by_board(self, board_id: int):
-        return self.db.query(Swimlane).filter(
-            Swimlane.board_id == board_id
-        ).order_by(Swimlane.position).all()
+    # ── UPDATE ──────────────────────────────────────────────────────────────
 
-    def update_name(self, lane_id: int, new_name: str):
-        lane = self.get_by_id(lane_id)
+    def atualizar_nome(self, swimlane_id: int, novo_nome: str) -> Swimlane | None:
+        """Atualiza o nome de uma swimlane."""
+        swimlane = self.buscar_por_id(swimlane_id)
+        if not swimlane:
+            return None
+        swimlane.name = novo_nome
+        self.session.flush()
+        return swimlane
 
-        if lane:
-            lane.name = new_name
-            self.db.commit()
-            self.db.refresh(lane)
+    def atualizar_posicao(self, swimlane_id: int,
+                          nova_posicao: int) -> Swimlane | None:
+        """Atualiza a posicao de ordenacao de uma swimlane."""
+        swimlane = self.buscar_por_id(swimlane_id)
+        if not swimlane:
+            return None
+        swimlane.position = nova_posicao
+        self.session.flush()
+        return swimlane
 
-        return lane
+    # ── DELETE ──────────────────────────────────────────────────────────────
 
-    def update_position(self, lane_id: int, new_position: int):
-        lane = self.get_by_id(lane_id)
-
-        if lane:
-            lane.position = new_position
-            self.db.commit()
-            self.db.refresh(lane)
-
-        return lane
-
-    def delete_swimlane(self, lane_id: int):
-        lane = self.get_by_id(lane_id)
-
-        if lane:
-            self.db.delete(lane)
-            self.db.commit()
-            return True
-
-        return False
+    def deletar(self, swimlane_id: int) -> bool:
+        """
+        Remove uma swimlane e todos os seus cards (cascade no model).
+        Retorna True se deletou, False se nao encontrou.
+        """
+        swimlane = self.buscar_por_id(swimlane_id)
+        if not swimlane:
+            return False
+        self.session.delete(swimlane)
+        self.session.flush()
+        return True
