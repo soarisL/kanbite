@@ -169,4 +169,5 @@ class CardRepo:
             return False
         self.session.delete(card)
         self.session.flush()
+
         return True
