@@ -1,3 +1,4 @@
+
 """
 database/repos/swimlane_repo.py - Repositorio de Swimlane (CRUD)
 Dev 2 - Sprint 3
@@ -6,6 +7,7 @@ Responsabilidade: acesso a dados da tabela 'swimlanes'.
 Swimlanes sao raias horizontais do quadro Kanban que permitem
 agrupar cards por categoria, responsavel ou qualquer criterio.
 """
+
 from sqlalchemy.orm import Session
 from models.swimlane import Swimlane
 
