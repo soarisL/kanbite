@@ -11,6 +11,8 @@ from services.auth_service import (
 )
 
 st.set_page_config(page_title="Login — KanBite", page_icon="🔐")
+from components.sidebar import render_sidebar
+render_sidebar()
 
 if "user_id" in st.session_state:
     st.success(f"Você já está logado como **{st.session_state['username']}**.")

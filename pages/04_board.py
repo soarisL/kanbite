@@ -1,6 +1,6 @@
 ﻿"""
 pages/04_board.py - Quadro Kanban Visual
-Dev 4 - Sprint 3
+Dev 4 - Sprint 4 (swimlanes + edicao de card + components)
 """
 import streamlit as st
 from database.engine import get_session
@@ -8,10 +8,14 @@ from services.kanban_service import (
     listar_boards, criar_board,
     listar_cards, criar_card, atualizar_card, deletar_card,
     mover_card, mover_swimlane,
-    listar_swimlanes, criar_swimlane,
+    listar_swimlanes, criar_swimlane, deletar_swimlane,
     WipLimitError, CardNaoEncontradoError,
 )
 from models.card import Coluna
+from components.sidebar import render_sidebar
+from components.kan_card import render_card
+
+render_sidebar()
 
 # ── Autenticação ──────────────────────────────────────────────────────────────
 if "user_id" not in st.session_state:
@@ -45,6 +49,29 @@ board_id_sel = st.selectbox("Quadro:", options=list(nomes_boards.keys()),
 board = next(b for b in boards if b.id == board_id_sel)
 
 st.caption(f"WIP Limit (FAZENDO): **{board.wip_doing}** cartões")
+
+# ── Swimlanes ──────────────────────────────────────────────────────────────────
+swimlanes = listar_swimlanes(session, board.id)
+
+with st.expander("🏊 Gerenciar swimlanes"):
+    with st.form("form_nova_swimlane", clear_on_submit=True):
+        nome_swimlane = st.text_input("Nome da swimlane", placeholder="ex: Cozinha")
+        if st.form_submit_button("➕ Adicionar swimlane"):
+            if nome_swimlane:
+                criar_swimlane(session, board.id, nome_swimlane, position=len(swimlanes))
+                st.success(f"Swimlane '{nome_swimlane}' criada!")
+                st.rerun()
+            else:
+                st.error("Informe um nome para a swimlane.")
+
+    if swimlanes:
+        for sw in swimlanes:
+            col_nome, col_del = st.columns([4, 1])
+            col_nome.write(f"🏊 {sw.name}")
+            if col_del.button("🗑️", key=f"del_sw_{sw.id}"):
+                deletar_swimlane(session, sw.id)
+                st.rerun()
+
 st.divider()
 
 # ── Colunas do Kanban ─────────────────────────────────────────────────────────
@@ -63,13 +90,53 @@ for coluna_enum, col_ui in colunas_ui.items():
 
         for card in cards_col:
             cor = PRIORIDADE_COR.get(card.priority.value, "⚪")
-            with st.expander(f"{cor} **{card.title}**", expanded=False):
-                st.write(f"👤 **Responsável:** {card.responsible}")
-                st.write(f"🎯 **Prioridade:** {card.priority.value.capitalize()}")
-                if card.description:
-                    st.write(f"📝 **Descrição:** {card.description}")
-                if card.due_date:
-                    st.write(f"📅 **Prazo:** {card.due_date.strftime('%d/%m/%Y')}")
+            nome_swimlane_atual = next(
+                (sw.name for sw in swimlanes if sw.id == card.swimlane_id), None
+            )
+            label_card = f"{cor} **{card.title}**"
+            if nome_swimlane_atual:
+                label_card += f" · 🏊 {nome_swimlane_atual}"
+
+            with st.expander(label_card, expanded=False):
+                render_card(card, show_actions=True)
+
+                # Mover entre swimlanes
+                if swimlanes:
+                    opcoes_sw = {None: "— Sem swimlane —", **{sw.id: sw.name for sw in swimlanes}}
+                    sw_sel = st.selectbox(
+                        "Swimlane:",
+                        options=list(opcoes_sw.keys()),
+                        format_func=lambda x: opcoes_sw[x],
+                        index=list(opcoes_sw.keys()).index(card.swimlane_id)
+                              if card.swimlane_id in opcoes_sw else 0,
+                        key=f"sw_sel_{card.id}",
+                    )
+                    if sw_sel != card.swimlane_id:
+                        mover_swimlane(session, card.id, sw_sel)
+                        st.rerun()
+
+                # Editar cartão
+                with st.popover("✏️ Editar"):
+                    with st.form(f"form_editar_{card.id}"):
+                        novo_titulo = st.text_input("Título", value=card.title)
+                        novo_resp   = st.text_input("Responsável", value=card.responsible)
+                        nova_prio   = st.selectbox(
+                            "Prioridade", ["baixa", "media", "alta"],
+                            index=["baixa", "media", "alta"].index(card.priority.value),
+                        )
+                        nova_desc   = st.text_area("Descrição", value=card.description or "")
+                        salvar = st.form_submit_button("💾 Salvar alterações")
+
+                    if salvar:
+                        atualizar_card(
+                            session, card.id,
+                            title=novo_titulo,
+                            responsible=novo_resp,
+                            priority=nova_prio,
+                            description=nova_desc,
+                        )
+                        st.success("Cartão atualizado!")
+                        st.rerun()
 
                 # Botões de mover
                 outras_colunas = [c for c in COLUNAS if c != coluna_enum]
