@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from database.base import Base
-from database.repos.board_repo import BoardRepository
+from database.repos.board_repo import BoardRepo
 from models.user import User
 
 
@@ -46,9 +46,9 @@ def test_user(db_session):
 
 # CREATE BOARD
 def test_create_board(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    board = repo.create_board(
+    board = repo.criar(
         name="Meu Kanban",
         owner_id=test_user.id
     )
@@ -62,14 +62,14 @@ def test_create_board(db_session, test_user):
 
 # BUSCAR POR ID
 def test_get_board_by_id(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    created = repo.create_board(
+    created = repo.criar(
         name="Projeto XPTO",
         owner_id=test_user.id
     )
 
-    board = repo.get_by_id(created.id)
+    board = repo.buscar_por_id(created.id)
 
     assert board is not None
     assert board.name == "Projeto XPTO"
@@ -77,49 +77,49 @@ def test_get_board_by_id(db_session, test_user):
 
 # BUSCAR POR USUÁRIO
 def test_get_board_by_owner(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    repo.create_board(name="Board 1", owner_id=test_user.id)
-    repo.create_board(name="Board 2", owner_id=test_user.id)
+    repo.criar(name="Board 1", owner_id=test_user.id)
+    repo.criar(name="Board 2", owner_id=test_user.id)
 
-    boards = repo.get_by_owned(test_user.id)
+    boards = repo.listar_por_usuario(test_user.id)
 
     assert len(boards) == 2
 
 
 # ATUALIZAR NOME
 def test_update_board_name(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    board = repo.create_board(
+    board = repo.criar(
         name="Antigo Nome",
         owner_id=test_user.id
     )
 
-    updated = repo.update_name(board.id, "Novo Nome")
+    updated = repo.atualizar_nome(board.id, "Novo Nome")
 
     assert updated.name == "Novo Nome"
 
 
 # DELETAR BOARD
 def test_delete_board(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    board = repo.create_board(
+    board = repo.criar(
         name="Excluir",
         owner_id=test_user.id
     )
 
-    result = repo.delete_board(board.id)
+    result = repo.deletar(board.id)
 
     assert result is True
-    assert repo.get_by_id(board.id) is None
+    assert repo.buscar_por_id(board.id) is None
 
 
 # DELETAR INEXISTENTE
 def test_delete_nonexistent_board(db_session):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    result = repo.delete_board(999)
+    result = repo.deletar(999)
 
     assert result is False

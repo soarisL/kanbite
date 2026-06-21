@@ -6,8 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from database.base import Base
-from database.repos.board_repo import BoardRepository
-from database.repos.swimlane_repo import SwimlaneRepository
+from database.repos.board_repo import BoardRepo
+from database.repos.swimlane_repo import SwimlaneRepo
 
 from models.user import User
 from models.board import Board
@@ -46,9 +46,9 @@ def test_user(db_session):
 # BOARD FAKE
 @pytest.fixture
 def test_board(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    board = repo.create_board(
+    board = repo.criar(
         name="Projeto Swimlane",
         owner_id=test_user.id
     )
@@ -57,9 +57,9 @@ def test_board(db_session, test_user):
 
 # TESTE CREATE
 def test_create_swimlane(db_session, test_board):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    lane = repo.create_swimlane(
+    lane = repo.criar(
         board_id=test_board.id,
         name="Backend",
         position=1
@@ -71,48 +71,48 @@ def test_create_swimlane(db_session, test_board):
 
 # TESTE GET BY ID
 def test_get_swimlane_by_id(db_session, test_board):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    created = repo.create_swimlane(
+    created = repo.criar(
         board_id=test_board.id,
         name="Frontend"
     )
 
-    lane = repo.get_by_id(created.id)
+    lane = repo.buscar_por_id(created.id)
 
     assert lane is not None
     assert lane.name == "Frontend"
 
 # TESTE LISTAR POR BOARD
 def test_get_swimlanes_by_board(db_session, test_board):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    repo.create_swimlane(
+    repo.criar(
         board_id=test_board.id,
         name="UX",
         position=1
     )
 
-    repo.create_swimlane(
+    repo.criar(
         board_id=test_board.id,
         name="QA",
         position=2
     )
 
-    lanes = repo.get_by_board(test_board.id)
+    lanes = repo.listar_por_board(test_board.id)
 
     assert len(lanes) == 2
 
 # UPDATE NAME
 def test_update_swimlane_name(db_session, test_board):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    lane = repo.create_swimlane(
+    lane = repo.criar(
         board_id=test_board.id,
         name="Antigo Nome"
     )
 
-    updated = repo.update_name(
+    updated = repo.atualizar_nome(
         lane.id,
         "Novo Nome"
     )
@@ -121,15 +121,15 @@ def test_update_swimlane_name(db_session, test_board):
 
 # UPDATE POSITION
 def test_update_swimlane_position(db_session, test_board):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    lane = repo.create_swimlane(
+    lane = repo.criar(
         board_id=test_board.id,
         name="DevOps",
         position=1
     )
 
-    updated = repo.update_position(
+    updated = repo.atualizar_posicao(
         lane.id,
         5
     )
@@ -138,22 +138,22 @@ def test_update_swimlane_position(db_session, test_board):
 
 # TESTE DELETE
 def test_delete_swimlane(db_session, test_board):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    lane = repo.create_swimlane(
+    lane = repo.criar(
         board_id=test_board.id,
         name="Excluir"
     )
 
-    result = repo.delete_swimlane(lane.id)
+    result = repo.deletar(lane.id)
 
     assert result is True
-    assert repo.get_by_id(lane.id) is None
+    assert repo.buscar_por_id(lane.id) is None
 
 # DELETE INEXISTENTE
 def test_delete_nonexistent_swimlane(db_session):
-    repo = SwimlaneRepository(db_session)
+    repo = SwimlaneRepo(db_session)
 
-    result = repo.delete_swimlane(999)
+    result = repo.deletar(999)
 
     assert result is False

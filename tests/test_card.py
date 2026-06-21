@@ -5,8 +5,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from database.base import Base
-from database.repos.card_repo import CardRepository
-from database.repos.board_repo import BoardRepository
+from database.repos.card_repo import CardRepo
+from database.repos.board_repo import BoardRepo
 
 from models.user import User
 from models.board import Board
@@ -44,9 +44,9 @@ def test_user(db_session):
 
 @pytest.fixture
 def test_board(db_session, test_user):
-    repo = BoardRepository(db_session)
+    repo = BoardRepo(db_session)
 
-    board = repo.create_board(
+    board = repo.criar(
         name="Projeto Teste",
         owner_id=test_user.id
     )
@@ -55,9 +55,9 @@ def test_board(db_session, test_user):
 
 # CARD:
 def test_create_card(db_session, test_board):
-    repo = CardRepository(db_session)
+    repo = CardRepo(db_session)
 
-    card = repo.create_card(
+    card = repo.criar(
         board_id=test_board.id,
         title="Criar API",
         responsible="Gustavo"
@@ -70,92 +70,89 @@ def test_create_card(db_session, test_board):
 
 # ID:
 def test_get_card_by_id(db_session, test_board):
-    repo = CardRepository(db_session)
+    repo = CardRepo(db_session)
 
-    created = repo.create_card(
+    created = repo.criar(
         board_id=test_board.id,
         title="Tela Login",
         responsible="Ana"
     )
 
-    card = repo.get_by_id(created.id)
+    card = repo.buscar_por_id(created.id)
 
     assert card is not None
     assert card.title == "Tela Login"
 
 # BOARD:
 def test_get_cards_by_board(db_session, test_board):
-    repo = CardRepository(db_session)
+    repo = CardRepo(db_session)
 
-    repo.create_card(
+    repo.criar(
         board_id=test_board.id,
         title="Task 1",
         responsible="A"
     )
 
-    repo.create_card(
+    repo.criar(
         board_id=test_board.id,
         title="Task 2",
         responsible="B"
     )
 
-    cards = repo.get_by_board(test_board.id)
+    cards = repo.listar_por_board(test_board.id)
 
     assert len(cards) == 2
 
 # TÍTULO:
 def test_update_card_title(db_session, test_board):
-    repo = CardRepository(db_session)
+    repo = CardRepo(db_session)
 
-    card = repo.create_card(
+    card = repo.criar(
         board_id=test_board.id,
         title="Antigo",
         responsible="Dev"
     )
 
-    updated = repo.update_title(card.id, "Novo")
+    updated = repo.atualizar(card.id, title="Novo", responsible="Dev")
 
     assert updated.title == "Novo"
 
 # MOVE CARD
 def test_move_card(db_session, test_board):
-    repo = CardRepository(db_session)
+    repo = CardRepo(db_session)
 
-    card = repo.create_card(
+    card = repo.criar(
         board_id=test_board.id,
         title="Mover Card",
         responsible="Dev"
     )
 
-    moved = repo.move_card(
-        card.id,
-        Coluna.FAZENDO,
-        1
-    )
-
+    repo.mover_coluna(card.id, Coluna.FAZENDO)
+    moved = repo.atualizar_posicao(card.id, 1)
+    
     assert moved.column == Coluna.FAZENDO
     assert moved.position == 1
     assert moved.started_at is not None
 
 # DELETA:
 def test_delete_card(db_session, test_board):
-    repo = CardRepository(db_session)
+    repo = CardRepo(db_session)
 
-    card = repo.create_card(
+    card = repo.criar(
         board_id=test_board.id,
         title="Excluir",
         responsible="Dev"
     )
 
-    result = repo.delete_card(card.id)
+    result = repo.deletar(card.id)
 
     assert result is True
-    assert repo.get_by_id(card.id) is None
+    assert repo.buscar_por_id(card.id) is None
 
 # INEXISTENTE:
 def test_delete_nonexistent_card(db_session):    
-    repo = CardRepository(db_session)    
+    repo = CardRepo(db_session)   
     
-    result = repo.delete_card(999)    
+    result = repo.deletar(999)    
     
     assert result is False
