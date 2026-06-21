@@ -1,8 +1,29 @@
-﻿/* assets/style.css - Paleta italiana do KanBite - Dev 4 */
-:root {
-  --verde-salvia: #4AAD85;
-  --terra-cotta:  #D85A30;
-  --ouro-romano:  #D4A84B;
-  --azul-noite:   #5B8FD4;
-  --rosa-antico:  #C46B9A;
+﻿/* KanBite — Estilo global */
+
+/* Botões principais */
+.stButton > button {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+/* Métricas */
+[data-testid="stMetric"] {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    border-left: 4px solid #c0392b;
+}
+
+/* Expanders (cards) */
+[data-testid="stExpander"] {
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 8px;
+}
+
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background-color: #1a1a2e;
+    color: white;
 }
