@@ -12,6 +12,9 @@ from services.kanban_service import (
     WipLimitError, CardNaoEncontradoError,
 )
 from models.card import Coluna
+
+st.set_page_config(page_title="Quadro — KanBite", page_icon="📋", layout="wide")
+
 from components.sidebar import render_sidebar
 from components.kan_card import render_card
 
@@ -23,7 +26,6 @@ if "user_id" not in st.session_state:
     st.page_link("pages/01_login.py", label="Ir para o Login →")
     st.stop()
 
-st.set_page_config(page_title="Quadro — KanBite", page_icon="📋", layout="wide")
 st.title("📋 Quadro Kanban")
 
 session  = get_session()
