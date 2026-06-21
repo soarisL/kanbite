@@ -45,5 +45,3 @@ if submitted:
         except Exception as e:
             st.error(f"Erro inesperado: {e}")
 
-st.divider()
-st.caption("Não tem conta? [Cadastre-se aqui](02_register)")
